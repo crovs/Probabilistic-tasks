@@ -48,6 +48,26 @@ main {
   padding: 32px;
 }
 
+.guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.callout {
+  background: var(--panel);
+  border: 1px solid rgba(31, 41, 51, 0.10);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.callout h2,
+.callout h3 {
+  margin-top: 0;
+}
+
 .home-link {
   display: inline-block;
   margin-bottom: 14px;
@@ -161,6 +181,10 @@ hr {
 }
 
 @media (max-width: 760px) {
+  .guide {
+    grid-template-columns: 1fr;
+  }
+
   .content {
     padding: 22px;
   }

@@ -6,6 +6,19 @@ Optional extra presentation file:
 
 - `list-02-model-explorer.html`
 
+## Understanding-First Note
+
+After re-reading the transcript, the teacher's expectation is very clear: a file with correct numbers but no explanation is not enough. These notes should help you do four things:
+
+1. identify the correct counting model,
+2. justify why it is the correct model,
+3. compute the answer,
+4. explain the meaning of the answer during presentation.
+
+So for each problem, try to say the sentence:
+
+> "The outcome here is ..., order does/does not matter, repetition is/is not allowed, therefore the right model is ..."
+
 ## Quick Reminder
 
 Before choosing a formula, always ask:
@@ -15,6 +28,17 @@ Before choosing a formula, always ask:
 3. Is repetition allowed?
 4. Are some objects identical?
 5. Is the arrangement linear or circular?
+
+## Visual Decision Map
+
+| Situation | What to picture | Model |
+| --- | --- | --- |
+| Use all objects in a row | line of positions | permutation |
+| Use all objects in a circle | round table | circular permutation |
+| Use all objects but some are identical | repeated letters / colors | permutation with repeated elements |
+| Choose some objects, order ignored | one selected group | combination |
+| Choose some objects, order matters, no repetition | ranking / medals / ordered slots | `k`-permutation |
+| Choose symbols with repetition | code or sequence of slots | sequence with repetition |
 
 ## Task 1 - Recognizing Counting Models
 
@@ -411,6 +435,15 @@ $$
 
 ## Task 10 - Urn Models
 
+### Why this task is especially important
+
+This task is almost a direct translation of what the teacher said in class: the same physical experiment can give different answers depending on how outcomes are recorded.
+
+- actual balls vs colors only,
+- order ignored vs order recorded.
+
+If you miss that point, you solve the wrong problem even if your counting is correct for some other model.
+
 The urn contains:
 
 - `5` red balls,
@@ -748,3 +781,25 @@ If you are asked to present during class, the safest structure is:
 2. name the model before writing the formula,
 3. only then compute the number,
 4. if he asks for something extra, open `list-02-model-explorer.html` and show how the decision logic works.
+
+## How to Explain Visually
+
+The easiest pictures for List 02 are:
+
+- permutation -> line of numbered positions,
+- circular permutation -> round table with one fixed anchor,
+- block method -> treat two objects as one rectangle/block,
+- combination -> one selected set,
+- `k`-permutation -> podium or ordered slots,
+- sequence with repetition -> code boxes,
+- repeated-elements permutation -> repeated letters or colored balls.
+
+## Self-Check Questions
+
+Before class, make sure you can answer these from memory:
+
+1. What is the difference between a combination and a `k`-permutation?
+2. When should you use the block method?
+3. Why is `(n-1)!` used for circular permutations?
+4. Why is "at least one" often easier by complement?
+5. Why can the same draw from an urn produce different counts under different recording rules?

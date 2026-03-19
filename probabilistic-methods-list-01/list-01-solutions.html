@@ -28,6 +28,33 @@
       <p id="page-subtitle" class="muted"></p>
     </section>
 
+    <section class="guide">
+      <article class="callout">
+        <h2>What To Understand</h2>
+        <p class="muted">
+          Do not stop at the formula. For this list, the key ideas are: what an elementary
+          outcome means, why order matters, and why Buffon's needle is continuous instead of discrete.
+        </p>
+      </article>
+
+      <article class="callout">
+        <h2>Best Visuals</h2>
+        <p class="muted">
+          Use a tree for coin and die experiments, boxes for card replacement vs no replacement,
+          a 7-position sequence for weather, and a shaded rectangle in the <code>(x, theta)</code>
+          plane for Buffon's needle.
+        </p>
+      </article>
+
+      <article class="callout">
+        <h2>What To Say Aloud</h2>
+        <p class="muted">
+          Start with: "One elementary outcome here is ...". Then say whether order matters,
+          define the event as a subset of the sample space, and only after that compute the probability.
+        </p>
+      </article>
+    </section>
+
     <article id="content" class="content">
       <p class="muted">Rendering solution page...</p>
     </article>
@@ -37,7 +64,7 @@
     window.addEventListener("load", () => {
       renderMarkdownPage({
         title: "Probabilistic Methods - List 01 Solutions",
-        subtitle: "Rendered HTML version of the Markdown solution file with math support for GitHub Pages.",
+        subtitle: "Rendered HTML version of the Markdown solution file, rewritten to support understanding, narration, and presentation.",
         markdownPath: "./list-01-solutions.md"
       });
     });

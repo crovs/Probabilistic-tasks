@@ -82,6 +82,21 @@
       margin-top: 24px;
     }
 
+    .guide {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .guide-card {
+      background: var(--panel);
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
     .panel {
       background: var(--panel);
       border: 1px solid rgba(31, 41, 51, 0.10);
@@ -224,6 +239,7 @@
     }
 
     @media (max-width: 900px) {
+      .guide,
       .grid {
         grid-template-columns: 1fr;
       }
@@ -244,6 +260,32 @@
         and one continuous Monte Carlo experiment, which matches the teacher's suggestion
         to enrich the solution set with HTML simulations and visual explanations.
       </p>
+    </section>
+
+    <section class="guide">
+      <article class="guide-card">
+        <h2>What To Understand</h2>
+        <p class="small">
+          The important contrast is discrete vs continuous: a coin-toss outcome is a finite sequence,
+          but a Buffon's needle outcome is a point in a continuous parameter space.
+        </p>
+      </article>
+
+      <article class="guide-card">
+        <h2>What To Visualize</h2>
+        <p class="small">
+          Use the coin tool to show how the sample space grows, then switch to Buffon's needle
+          to show that probability can also come from geometry and simulation.
+        </p>
+      </article>
+
+      <article class="guide-card">
+        <h2>What To Say</h2>
+        <p class="small">
+          Explain what one outcome means, what changes when the experiment gains another step,
+          and why long-run Monte Carlo frequencies move toward the theoretical probability.
+        </p>
+      </article>
     </section>
 
     <section class="grid">

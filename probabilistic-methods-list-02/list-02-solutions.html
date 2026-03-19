@@ -28,6 +28,34 @@
       <p id="page-subtitle" class="muted"></p>
     </section>
 
+    <section class="guide">
+      <article class="callout">
+        <h2>What To Understand</h2>
+        <p class="muted">
+          This list is about choosing the correct model before calculating. The important part
+          is not only the number, but why the problem is a permutation, combination,
+          <code>k</code>-permutation, or sequence with repetition.
+        </p>
+      </article>
+
+      <article class="callout">
+        <h2>Best Visuals</h2>
+        <p class="muted">
+          Use a line of positions for permutations, a round table for circular permutations,
+          a podium for ordered selections, code boxes for repeated sequences, and grouped objects
+          for combinations.
+        </p>
+      </article>
+
+      <article class="callout">
+        <h2>What To Say Aloud</h2>
+        <p class="muted">
+          Start with: "The outcome here is ...". Then say whether order matters, whether repetition
+          is allowed, and whether all objects or only some are used. That sentence should determine the model.
+        </p>
+      </article>
+    </section>
+
     <article id="content" class="content">
       <p class="muted">Rendering solution page...</p>
     </article>
@@ -37,7 +65,7 @@
     window.addEventListener("load", () => {
       renderMarkdownPage({
         title: "Probabilistic Methods - List 02 Solutions",
-        subtitle: "Rendered HTML version of the Markdown solution file with math support for GitHub Pages.",
+        subtitle: "Rendered HTML version of the Markdown solution file, rewritten to support understanding, model choice, and presentation.",
         markdownPath: "./list-02-solutions.md"
       });
     });

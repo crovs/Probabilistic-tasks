@@ -86,6 +86,21 @@
       gap: 22px;
     }
 
+    .guide {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .guide-card {
+      background: var(--panel);
+      border: 1px solid rgba(28, 36, 48, 0.10);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
     .panel {
       padding: 22px;
       min-width: 0;
@@ -177,6 +192,7 @@
     }
 
     @media (max-width: 920px) {
+      .guide,
       .grid,
       .control-grid {
         grid-template-columns: 1fr;
@@ -194,6 +210,32 @@
         correct counting model and how to evaluate the main combinatorial formulas used in
         probability problems.
       </p>
+    </section>
+
+    <section class="guide">
+      <article class="guide-card">
+        <h2>What To Understand</h2>
+        <p class="note">
+          The goal is not to memorize formulas mechanically. The goal is to identify what the
+          outcome looks like and let that determine the counting model.
+        </p>
+      </article>
+
+      <article class="guide-card">
+        <h2>What To Visualize</h2>
+        <p class="note">
+          Picture a line of positions, a round table, a selected group, a podium, or a sequence of
+          code boxes. The picture should tell you which model applies.
+        </p>
+      </article>
+
+      <article class="guide-card">
+        <h2>What To Say</h2>
+        <p class="note">
+          Start with: "We are counting ..., order does/does not matter, repetition is/is not allowed,
+          therefore the correct model is ...".
+        </p>
+      </article>
     </section>
 
     <section class="grid">
