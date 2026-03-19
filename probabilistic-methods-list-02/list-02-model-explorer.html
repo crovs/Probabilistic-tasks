@@ -106,6 +106,146 @@
       min-width: 0;
     }
 
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin: 16px 0 18px;
+    }
+
+    .demo-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .demo-card {
+      background: var(--panel);
+      border: 1px solid rgba(28, 36, 48, 0.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .stage {
+      min-height: 170px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fffdf9 0%, #f6efe2 100%);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px 0;
+    }
+
+    .slot-row,
+    .chip-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .slot,
+    .chip {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .slot.active,
+    .chip.active {
+      transform: translateY(-3px) scale(1.03);
+      background: #e9f7f4;
+      box-shadow: 0 10px 18px rgba(15, 118, 110, 0.15);
+    }
+
+    .chip.sorted {
+      background: #f7efe1;
+    }
+
+    .table-wrap {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+    .table-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dashed var(--line);
+      transition: transform 900ms ease;
+    }
+
+    .table-ring.spin {
+      transform: rotate(360deg);
+    }
+
+    .seat {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transform: translate(-50%, -50%);
+    }
+
+    .line-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .person {
+      min-width: 44px;
+      height: 48px;
+      padding: 0 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .block {
+      display: flex;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 16px;
+      border: 2px solid var(--accent);
+      background: rgba(15, 118, 110, 0.08);
+      transition: transform 220ms ease;
+    }
+
+    .block.bump {
+      transform: translateY(-4px) scale(1.03);
+    }
+
+    .hidden {
+      display: none;
+    }
+
     .control-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -193,6 +333,7 @@
 
     @media (max-width: 920px) {
       .guide,
+      .demo-grid,
       .grid,
       .control-grid {
         grid-template-columns: 1fr;
@@ -251,7 +392,7 @@
         </p>
 
         <div class="control-grid">
-          <div class="control">
+          <div class="control" id="wrap-use-all">
             <label for="use-all">Are we using all objects?</label>
             <select id="use-all">
               <option value="yes" selected>Yes</option>
@@ -259,7 +400,7 @@
             </select>
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-is-circle">
             <label for="is-circle">Are objects arranged in a circle?</label>
             <select id="is-circle">
               <option value="no" selected>No</option>
@@ -267,7 +408,7 @@
             </select>
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-order">
             <label for="order-matters">Does order matter?</label>
             <select id="order-matters">
               <option value="yes" selected>Yes</option>
@@ -275,7 +416,7 @@
             </select>
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-repetition">
             <label for="repetition-allowed">Is repetition allowed?</label>
             <select id="repetition-allowed">
               <option value="no" selected>No</option>
@@ -283,7 +424,7 @@
             </select>
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-identical">
             <label for="identical-objects">Are some objects identical?</label>
             <select id="identical-objects">
               <option value="no" selected>No</option>
@@ -294,6 +435,7 @@
 
         <div class="result">
           <strong id="model-name">Permutation</strong>
+          <p id="decision-path" class="note"></p>
           <div id="model-formula" class="formula">n!</div>
           <p id="model-explanation" class="note"></p>
           <div id="model-tags"></div>
@@ -308,7 +450,7 @@
         </p>
 
         <div class="control-grid">
-          <div class="control">
+          <div class="control" id="wrap-calc-model">
             <label for="calc-model">Model</label>
             <select id="calc-model">
               <option value="permutation">Permutation</option>
@@ -320,17 +462,17 @@
             </select>
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-calc-n">
             <label for="calc-n">n</label>
             <input id="calc-n" type="number" min="0" value="7">
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-calc-k">
             <label for="calc-k">k</label>
             <input id="calc-k" type="number" min="0" value="3">
           </div>
 
-          <div class="control">
+          <div class="control" id="wrap-calc-repeats">
             <label for="calc-repeats">Repeated multiplicities</label>
             <input id="calc-repeats" type="text" value="3,3,2">
           </div>
@@ -338,9 +480,74 @@
 
         <div class="result">
           <strong id="calc-title">Permutation</strong>
+          <p id="calc-path" class="note"></p>
           <div id="calc-formula" class="formula">7! = 5040</div>
           <p id="calc-note" class="note"></p>
         </div>
+      </article>
+    </section>
+
+    <section class="demo-grid">
+      <article class="demo-card">
+        <h2>Ordered vs Unordered</h2>
+        <p class="note">Fast intuition for sequence, combination, and <code>k</code>-permutation.</p>
+
+        <div class="controls">
+          <div class="control">
+            <label for="demo-mode">Demo mode</label>
+            <select id="demo-mode">
+              <option value="sequence">Sequence with repetition</option>
+              <option value="kpermutation">k-permutation</option>
+              <option value="combination">Combination</option>
+            </select>
+          </div>
+          <button id="demo-run">Run Demo</button>
+        </div>
+
+        <div class="stage">
+          <div id="demo-stage"></div>
+        </div>
+
+        <p id="demo-caption" class="note"></p>
+      </article>
+
+      <article class="demo-card">
+        <h2>Circular Rotation</h2>
+        <p class="note">Same relative seating, different absolute rotation.</p>
+
+        <div class="controls">
+          <button id="rotate-table">Rotate Table</button>
+        </div>
+
+        <div class="stage">
+          <div class="table-wrap">
+            <div id="table-ring" class="table-ring">
+              <div class="seat" style="left: 50%; top: 10%;">A</div>
+              <div class="seat" style="left: 84%; top: 30%;">B</div>
+              <div class="seat" style="left: 84%; top: 70%;">C</div>
+              <div class="seat" style="left: 50%; top: 90%;">D</div>
+              <div class="seat" style="left: 16%; top: 70%;">E</div>
+              <div class="seat" style="left: 16%; top: 30%;">F</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="note">Rotation should not create a new circular arrangement.</p>
+      </article>
+
+      <article class="demo-card">
+        <h2>Block Method</h2>
+        <p class="note">Two people stay together, so first treat them as one block.</p>
+
+        <div class="controls">
+          <button id="shuffle-block">Shuffle Line</button>
+        </div>
+
+        <div class="stage">
+          <div id="block-stage" class="line-wrap"></div>
+        </div>
+
+        <p class="note">Count the line with one merged block, then multiply by the internal order.</p>
       </article>
     </section>
   </main>
@@ -351,8 +558,13 @@
     const orderMatters = document.getElementById("order-matters");
     const repetitionAllowed = document.getElementById("repetition-allowed");
     const identicalObjects = document.getElementById("identical-objects");
+    const wrapIsCircle = document.getElementById("wrap-is-circle");
+    const wrapOrder = document.getElementById("wrap-order");
+    const wrapRepetition = document.getElementById("wrap-repetition");
+    const wrapIdentical = document.getElementById("wrap-identical");
 
     const modelName = document.getElementById("model-name");
+    const decisionPath = document.getElementById("decision-path");
     const modelFormula = document.getElementById("model-formula");
     const modelExplanation = document.getElementById("model-explanation");
     const modelTags = document.getElementById("model-tags");
@@ -361,9 +573,21 @@
     const calcN = document.getElementById("calc-n");
     const calcK = document.getElementById("calc-k");
     const calcRepeats = document.getElementById("calc-repeats");
+    const wrapCalcN = document.getElementById("wrap-calc-n");
+    const wrapCalcK = document.getElementById("wrap-calc-k");
+    const wrapCalcRepeats = document.getElementById("wrap-calc-repeats");
     const calcTitle = document.getElementById("calc-title");
+    const calcPath = document.getElementById("calc-path");
     const calcFormula = document.getElementById("calc-formula");
     const calcNote = document.getElementById("calc-note");
+    const demoMode = document.getElementById("demo-mode");
+    const demoRun = document.getElementById("demo-run");
+    const demoStage = document.getElementById("demo-stage");
+    const demoCaption = document.getElementById("demo-caption");
+    const rotateTable = document.getElementById("rotate-table");
+    const tableRing = document.getElementById("table-ring");
+    const shuffleBlock = document.getElementById("shuffle-block");
+    const blockStage = document.getElementById("block-stage");
 
     function factorialBigInt(n) {
       if (n < 0) {
@@ -424,7 +648,149 @@
       });
     }
 
+    function showElement(element, visible) {
+      element.classList.toggle("hidden", !visible);
+    }
+
+    function syncDecisionControls() {
+      const all = useAll.value === "yes";
+      const order = orderMatters.value === "yes";
+
+      showElement(wrapIsCircle, all);
+      showElement(wrapIdentical, all);
+      showElement(wrapOrder, !all);
+      showElement(wrapRepetition, !all && order);
+
+      if (all) {
+        orderMatters.value = "yes";
+        repetitionAllowed.value = "no";
+      } else {
+        isCircle.value = "no";
+        identicalObjects.value = "no";
+        if (!order) {
+          repetitionAllowed.value = "no";
+        }
+      }
+
+      if (all && isCircle.value === "yes") {
+        orderMatters.value = "yes";
+      }
+    }
+
+    function syncCalculatorControls() {
+      const model = calcModel.value;
+
+      showElement(wrapCalcN, model !== "repeated");
+      showElement(wrapCalcK, model === "combination" || model === "kpermutation" || model === "sequence");
+      showElement(wrapCalcRepeats, model === "repeated");
+
+      if (model === "repeated" && !calcRepeats.value.trim()) {
+        calcRepeats.value = "3,3,2";
+      }
+    }
+
+    function randomChoice(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function renderDemo(mode) {
+      demoStage.innerHTML = "";
+      const letters = ["A", "B", "C", "D"];
+
+      if (mode === "combination") {
+        const selected = shuffle(letters).slice(0, 3).sort();
+        const row = document.createElement("div");
+        row.className = "chip-row";
+        selected.forEach((letter) => {
+          const chip = document.createElement("div");
+          chip.className = "chip sorted active";
+          chip.textContent = letter;
+          row.appendChild(chip);
+        });
+        demoStage.appendChild(row);
+        demoCaption.textContent = "Combination: choose a set. Order is ignored.";
+        return;
+      }
+
+      const row = document.createElement("div");
+      row.className = "slot-row";
+      const slots = [];
+      for (let i = 0; i < 3; i += 1) {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.textContent = "?";
+        row.appendChild(slot);
+        slots.push(slot);
+      }
+      demoStage.appendChild(row);
+
+      let pool = [...letters];
+      const picks = [];
+      for (let i = 0; i < 3; i += 1) {
+        let next;
+        if (mode === "sequence") {
+          next = randomChoice(letters);
+        } else {
+          pool = shuffle(pool);
+          next = pool.shift();
+        }
+        picks.push(next);
+      }
+
+      slots.forEach((slot, index) => {
+        setTimeout(() => {
+          slot.textContent = picks[index];
+          slot.classList.add("active");
+        }, 220 * (index + 1));
+      });
+
+      demoCaption.textContent = mode === "sequence"
+        ? "Sequence with repetition: ordered slots, symbols may repeat."
+        : "k-permutation: ordered slots, no symbol repeats.";
+    }
+
+    function renderBlockLine() {
+      blockStage.innerHTML = "";
+      const others = shuffle(["C", "D", "E", "F", "G", "H"]);
+      const blockMembers = Math.random() < 0.5 ? ["A", "B"] : ["B", "A"];
+      const units = shuffle([
+        ...others.slice(0, 3),
+        "__BLOCK__",
+        ...others.slice(3)
+      ]);
+
+      units.forEach((unit) => {
+        if (unit === "__BLOCK__") {
+          const block = document.createElement("div");
+          block.className = "block bump";
+          blockMembers.forEach((letter) => {
+            const person = document.createElement("div");
+            person.className = "person";
+            person.textContent = letter;
+            block.appendChild(person);
+          });
+          blockStage.appendChild(block);
+        } else {
+          const person = document.createElement("div");
+          person.className = "person";
+          person.textContent = unit;
+          blockStage.appendChild(person);
+        }
+      });
+    }
+
     function updateDecisionAssistant() {
+      syncDecisionControls();
+
       const all = useAll.value === "yes";
       const circle = isCircle.value === "yes";
       const order = orderMatters.value === "yes";
@@ -435,57 +801,65 @@
       let formula = "";
       let explanation = "";
       let tags = [];
+      let path = [];
 
       if (all) {
+        path.push("all objects");
         if (circle) {
+          path.push("circle");
           if (identical) {
             name = "Circular arrangement with identical objects";
             formula = "No single standard formula in this simple decision tree";
-            explanation = "The course decision tree points first to circular permutations, but once identical objects appear the counting becomes more specialized and usually needs separate case analysis.";
+            explanation = "Circle + identical objects usually needs a custom case analysis.";
             tags = ["all objects", "circle", "rotations equivalent", "special case"];
           } else {
             name = "Circular permutation";
             formula = "(n - 1)!";
-            explanation = "All objects are used, they are distinct, and arrangements differing only by rotation are treated as the same.";
+            explanation = "Use all objects around a circle. Rotations are the same.";
             tags = ["all objects", "circle", "distinct objects"];
           }
         } else if (identical) {
+          path.push("line");
+          path.push("identical objects");
           name = "Permutation with repeated elements";
           formula = "n! / (n1! n2! ... nr!)";
-          explanation = "All objects are arranged, but some of them are indistinguishable, so we divide by the factorials of repeated multiplicities.";
+          explanation = "Use all objects in a line, but equal objects do not create new arrangements.";
           tags = ["all objects", "linear", "identical objects"];
         } else {
+          path.push("line");
+          path.push("distinct objects");
           name = "Permutation";
           formula = "n!";
-          explanation = "All objects are arranged in order, with no repetition and no circular symmetry.";
+          explanation = "Use all distinct objects in a line.";
           tags = ["all objects", "linear", "distinct objects"];
         }
       } else if (!order) {
+        path.push("some objects");
+        path.push("order ignored");
         name = "Combination";
         formula = "C(n, k) = n! / (k! (n-k)!)";
-        explanation = "Only some objects are chosen and order does not matter.";
+        explanation = "Choose some objects. Order does not matter.";
         tags = ["some objects", "unordered", "no repetition"];
       } else if (repetition) {
+        path.push("some objects");
+        path.push("order matters");
+        path.push("repetition allowed");
         name = "Sequence with repetition";
         formula = "n^k";
-        explanation = "Each of the k positions can be filled independently from the same set of n symbols.";
+        explanation = "Ordered slots, each slot can reuse the same symbols.";
         tags = ["some objects", "ordered", "repetition allowed"];
       } else {
+        path.push("some objects");
+        path.push("order matters");
+        path.push("no repetition");
         name = "k-permutation";
         formula = "P(n, k) = n! / (n-k)!";
-        explanation = "Only some objects are used, order matters, and repetition is not allowed.";
+        explanation = "Ordered selection without repetition.";
         tags = ["some objects", "ordered", "no repetition"];
       }
 
-      if (!all && circle) {
-        explanation += " The circle answer is ignored here because circular permutations are normally used when all objects are arranged around the circle.";
-      }
-
-      if (!all && identical) {
-        explanation += " If selected objects themselves are identical, the problem may require a more specialized model than the basic tree.";
-      }
-
       modelName.textContent = name;
+      decisionPath.textContent = `Path: ${path.join(" -> ")}`;
       modelFormula.textContent = formula;
       modelExplanation.textContent = explanation;
       setTags(tags);
@@ -497,6 +871,8 @@
     }
 
     function updateCalculator() {
+      syncCalculatorControls();
+
       const model = calcModel.value;
       const n = parseIntSafe(calcN.value);
       const k = parseIntSafe(calcK.value);
@@ -505,10 +881,12 @@
       let title = "";
       let formula = "";
       let note = "";
+      let path = "";
 
-      if (!Number.isInteger(n) || n < 0) {
+      if (model !== "repeated" && (!Number.isInteger(n) || n < 0)) {
         calcTitle.textContent = "Invalid input";
         calcFormula.textContent = "n must be a non-negative integer";
+        calcPath.textContent = "";
         calcNote.textContent = "";
         return;
       }
@@ -516,6 +894,7 @@
       if ((model === "combination" || model === "kpermutation" || model === "sequence") && (!Number.isInteger(k) || k < 0)) {
         calcTitle.textContent = "Invalid input";
         calcFormula.textContent = "k must be a non-negative integer";
+        calcPath.textContent = "";
         calcNote.textContent = "";
         return;
       }
@@ -524,7 +903,8 @@
         title = "Permutation";
         const value = factorialBigInt(n);
         formula = `${n}! = ${formatBigInt(value)}`;
-        note = "All n distinct objects are arranged.";
+        path = "Need only n";
+        note = "All distinct objects are used.";
       } else if (model === "circular") {
         title = "Circular permutation";
         if (n === 0) {
@@ -533,53 +913,56 @@
         } else {
           const value = factorialBigInt(n - 1);
           formula = `(${n} - 1)! = ${formatBigInt(value)}`;
-          note = "Rotations are treated as the same arrangement.";
+          note = "Rotations are the same arrangement.";
         }
+        path = "Need only n";
       } else if (model === "combination") {
         title = "Combination";
         const value = combinationBigInt(n, k);
         formula = value === null
           ? `C(${n}, ${k}) is undefined for k > n`
           : `C(${n}, ${k}) = ${formatBigInt(value)}`;
-        note = "Choose k objects from n when order does not matter.";
+        path = "Need n and k";
+        note = "Choose k objects, order ignored.";
       } else if (model === "kpermutation") {
         title = "k-permutation";
         const value = permutationBigInt(n, k);
         formula = value === null
           ? `P(${n}, ${k}) is undefined for k > n`
           : `P(${n}, ${k}) = ${formatBigInt(value)}`;
-        note = "Ordered selection of k objects from n without repetition.";
+        path = "Need n and k";
+        note = "Ordered selection without repetition.";
       } else if (model === "sequence") {
         title = "Sequence with repetition";
         const value = powerBigInt(n, k);
         formula = `${n}^${k} = ${formatBigInt(value)}`;
-        note = "Each of the k positions has n independent choices.";
+        path = "Need n and k";
+        note = "k ordered slots, each with n choices.";
       } else {
         title = "Permutation with repeated elements";
         const parts = repeatsText === ""
           ? []
           : repeatsText.split(",").map((piece) => Number(piece.trim())).filter((piece) => Number.isInteger(piece) && piece >= 0);
         const sum = parts.reduce((acc, value) => acc + value, 0);
+        path = "Need only multiplicities";
 
         if (parts.length === 0) {
           formula = "Enter multiplicities such as 3,3,2";
-          note = "The multiplicities should add up to n.";
-        } else if (sum !== n) {
-          formula = `The multiplicities sum to ${sum}, but n = ${n}`;
-          note = "For n! / (n1! n2! ...), the multiplicities must add up to n.";
+          note = "Example: BANANA -> 3,2,1";
         } else {
           let denominator = 1n;
           parts.forEach((part) => {
             denominator *= factorialBigInt(part);
           });
-          const numerator = factorialBigInt(n);
+          const numerator = factorialBigInt(sum);
           const value = numerator / denominator;
-          formula = `${n}! / (${parts.map((part) => `${part}!`).join(" ")}) = ${formatBigInt(value)}`;
-          note = "Use this when equal objects are indistinguishable.";
+          formula = `${sum}! / (${parts.map((part) => `${part}!`).join(" ")}) = ${formatBigInt(value)}`;
+          note = `Auto-detected n = ${sum} from the multiplicities.`;
         }
       }
 
       calcTitle.textContent = title;
+      calcPath.textContent = path;
       calcFormula.textContent = formula;
       calcNote.textContent = note;
     }
@@ -593,8 +976,19 @@
       element.addEventListener("change", updateCalculator);
     });
 
+    demoRun.addEventListener("click", () => renderDemo(demoMode.value));
+    demoMode.addEventListener("change", () => renderDemo(demoMode.value));
+    rotateTable.addEventListener("click", () => {
+      tableRing.classList.remove("spin");
+      void tableRing.offsetWidth;
+      tableRing.classList.add("spin");
+    });
+    shuffleBlock.addEventListener("click", renderBlockLine);
+
     updateDecisionAssistant();
     updateCalculator();
+    renderDemo(demoMode.value);
+    renderBlockLine();
   </script>
 </body>
 </html>
