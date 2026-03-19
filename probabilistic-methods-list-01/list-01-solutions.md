@@ -6,30 +6,23 @@ Optional extra presentation file:
 
 - `list-01-visualizations.html`
 
-## Understanding-First Note
+## Quick Use
 
-After re-reading the class transcript, the main point is this: the teacher does **not** want only a correct final answer. He wants notes that help you:
+Use each task in this order:
 
-- read the problem,
-- understand what the outcome means,
-- explain the reasoning step by step,
-- and present the result in your own words.
-
-So when using this file, do not stop at the formula. For each task, try to answer:
-
-1. What exactly is one elementary outcome?
-2. Does order matter here?
-3. What is the simplest way to describe the whole sample space?
-4. What does the final number or probability mean in plain English?
+1. say what one outcome looks like,
+2. decide whether order matters,
+3. define the sample space or event,
+4. only then compute.
 
 ## Visual Map for List 01
 
 | Part of the list | Main idea | Best visual explanation |
 | --- | --- | --- |
-| Tasks 1-4 | Discrete sample spaces | Tree diagram or sequence table |
-| Task 5 | Continuous sample space | Rectangle in the `(x,\\theta)` plane |
-| Tasks 6-9 | Events as subsets | Highlight favorable outcomes or use complements |
-| Task 10 | Probability as area | Region inside the continuous sample space |
+| Tasks 1-4 | sequence outcomes | tree or slots |
+| Task 5 | continuous outcome | rectangle in `(x,\\theta)` |
+| Tasks 6-9 | event inside sample space | highlight cases / complement |
+| Task 10 | probability as area | shaded region |
 
 ## Task 1 - Coin Tossing
 
@@ -328,17 +321,14 @@ In the previous tasks, the outcomes were discrete and countable. Here `x` and `\
 
 ## Task 6 - Events and Probabilities in Coin Tossing
 
-## General Workflow for Event Problems
+## Event Workflow
 
-For Tasks `6-10`, the safest reasoning pattern is:
+For Tasks `6-10`:
 
-1. define the sample space,
-2. define the event as a subset of that sample space,
+1. define `\Omega`,
+2. define the event,
 3. count or measure the favorable part,
-4. divide by the total number of cases,
-5. interpret the result in words.
-
-This is exactly the type of narration the teacher was asking for in class: not just "the answer is ...", but also "why this is the correct subset and why this fraction makes sense".
+4. divide by the total.
 
 Because the coin is fair:
 
@@ -980,30 +970,22 @@ P(F)
 = \frac{(2-\sqrt{3})L}{\pi d}.
 $$
 
-## Short Presentation Note
+## Quick Presentation
 
-If asked during class, the safest order is:
+1. show the task,
+2. say what one outcome is,
+3. explain the model with one picture,
+4. then give the formula.
 
-1. open this file in Markdown preview,
-2. quickly show that all tasks from the current list are prepared,
-3. if he asks for "something extra", open `list-01-visualizations.html`,
-4. explain the idea, not only the final result.
+## Fast Visual Cues
 
-## How to Explain Visually
+- coin / die -> tree
+- cards -> with replacement vs without replacement
+- weather -> 7 slots
+- Buffon -> shaded region in `(x,\\theta)`
 
-If you need to explain the list on screen, the easiest pictures are:
+## Fast Self-Check
 
-- coin or die tasks -> draw a tree,
-- card tasks -> draw two boxes: with replacement / without replacement,
-- weather task -> show a 7-position sequence,
-- Buffon's needle -> draw the rectangle `[0,d/2] x [0,\\pi/2]` and shade the event region.
-
-## Self-Check Questions
-
-Before class, make sure you can answer these without looking:
-
-1. What is the difference between an elementary outcome and an event?
-2. Why does replacement change the sample space in card problems?
-3. Why are "at least one" events often easier by complements?
-4. Why is Buffon's needle continuous while coin tossing is discrete?
-5. Can you explain at least one task using a picture, not only a formula?
+- Can I explain one elementary outcome?
+- Can I say why order matters or not?
+- Can I draw the idea in 10 seconds?

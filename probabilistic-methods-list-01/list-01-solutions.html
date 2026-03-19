@@ -31,27 +31,29 @@
     <section class="guide">
       <article class="callout">
         <h2>What To Understand</h2>
-        <p class="muted">
-          Do not stop at the formula. For this list, the key ideas are: what an elementary
-          outcome means, why order matters, and why Buffon's needle is continuous instead of discrete.
-        </p>
+        <ul class="muted">
+          <li>one elementary outcome</li>
+          <li>why order matters</li>
+          <li>discrete vs continuous</li>
+        </ul>
       </article>
 
       <article class="callout">
         <h2>Best Visuals</h2>
-        <p class="muted">
-          Use a tree for coin and die experiments, boxes for card replacement vs no replacement,
-          a 7-position sequence for weather, and a shaded rectangle in the <code>(x, theta)</code>
-          plane for Buffon's needle.
-        </p>
+        <ul class="muted">
+          <li>tree for coin / die</li>
+          <li>two boxes for card replacement</li>
+          <li>shaded `(x, theta)` region for Buffon</li>
+        </ul>
       </article>
 
       <article class="callout">
         <h2>What To Say Aloud</h2>
-        <p class="muted">
-          Start with: "One elementary outcome here is ...". Then say whether order matters,
-          define the event as a subset of the sample space, and only after that compute the probability.
-        </p>
+        <ul class="muted">
+          <li>"One outcome here is ..."</li>
+          <li>"Order matters / does not matter"</li>
+          <li>"So the event is ..."</li>
+        </ul>
       </article>
     </section>
 
@@ -64,7 +66,7 @@
     window.addEventListener("load", () => {
       renderMarkdownPage({
         title: "Probabilistic Methods - List 01 Solutions",
-        subtitle: "Rendered HTML version of the Markdown solution file, rewritten to support understanding, narration, and presentation.",
+        subtitle: "Compact study + presentation version with rendered math.",
         markdownPath: "./list-01-solutions.md"
       });
     });
