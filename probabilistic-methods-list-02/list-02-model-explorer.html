@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Probabilistic Methods - List 02 Model Explorer</title>
+  <title>List 02 - Urn Recording Lab</title>
   <style>
     :root {
-      --bg: #f3efe8;
-      --panel: rgba(255, 251, 245, 0.9);
-      --ink: #1c2430;
-      --muted: #586171;
+      --bg: #f5efe6;
+      --panel: rgba(255, 251, 245, 0.92);
+      --ink: #1f2933;
+      --muted: #5d6672;
       --accent: #0f766e;
       --accent-2: #b45309;
-      --line: #d5c9b4;
-      --shadow: 0 18px 42px rgba(26, 28, 32, 0.10);
-      --good: #166534;
-      --warn: #92400e;
+      --line: #d8c8ac;
+      --shadow: 0 18px 42px rgba(34, 28, 20, 0.12);
+      --red: #dc2626;
+      --blue: #2563eb;
+      --green: #16a34a;
     }
 
     * {
@@ -24,12 +25,12 @@
 
     body {
       margin: 0;
-      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-family: Georgia, "Times New Roman", serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 0% 0%, rgba(15, 118, 110, 0.10), transparent 26%),
-        radial-gradient(circle at 100% 0%, rgba(180, 83, 9, 0.10), transparent 24%),
-        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(180, 83, 9, 0.10), transparent 24%),
+        linear-gradient(180deg, #fbf7f0 0%, var(--bg) 100%);
     }
 
     main {
@@ -38,20 +39,11 @@
       padding: 32px 20px 48px;
     }
 
-    h1, h2, h3 {
-      margin: 0 0 12px;
-      line-height: 1.1;
-    }
-
-    p {
-      margin: 0 0 12px;
-      line-height: 1.55;
-    }
-
     .hero,
-    .panel {
+    .panel,
+    .card {
       background: var(--panel);
-      border: 1px solid rgba(28, 36, 48, 0.10);
+      border: 1px solid rgba(31, 41, 51, 0.10);
       border-radius: 24px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
@@ -59,12 +51,6 @@
 
     .hero {
       padding: 28px;
-    }
-
-    .hero p {
-      max-width: 880px;
-      color: var(--muted);
-      font-size: 1.04rem;
     }
 
     .home-link {
@@ -79,26 +65,25 @@
       font-size: 0.92rem;
     }
 
-    .grid {
-      margin-top: 24px;
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.55;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .lab {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1.2fr 0.8fr;
       gap: 22px;
-    }
-
-    .guide {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
       margin-top: 24px;
-    }
-
-    .guide-card {
-      background: var(--panel);
-      border: 1px solid rgba(28, 36, 48, 0.10);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 18px;
     }
 
     .panel {
@@ -110,197 +95,16 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      align-items: center;
       margin: 16px 0 18px;
-    }
-
-    .demo-grid {
-      margin-top: 24px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 22px;
-    }
-
-    .demo-card {
-      background: var(--panel);
-      border: 1px solid rgba(28, 36, 48, 0.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 22px;
-      min-width: 0;
-    }
-
-    .stage {
-      min-height: 170px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: linear-gradient(180deg, #fffdf9 0%, #f6efe2 100%);
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 14px 0;
-    }
-
-    .demo-card.wide {
-      grid-column: span 2;
-    }
-
-    .slot-row,
-    .chip-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .slot,
-    .chip {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1.05rem;
-      transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
-    }
-
-    .slot.active,
-    .chip.active {
-      transform: translateY(-3px) scale(1.03);
-      background: #e9f7f4;
-      box-shadow: 0 10px 18px rgba(15, 118, 110, 0.15);
-    }
-
-    .chip.sorted {
-      background: #f7efe1;
-    }
-
-    .chip.fade {
-      opacity: 0.55;
-      background: #f6efe4;
-    }
-
-    .table-wrap {
-      position: relative;
-      width: 220px;
-      height: 220px;
-    }
-
-    .table-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 2px dashed var(--line);
-      transition: transform 900ms ease;
-    }
-
-    .table-ring.spin {
-      transform: rotate(360deg);
-    }
-
-    .seat {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #fff;
-      border: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      transform: translate(-50%, -50%);
-    }
-
-    .line-wrap {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .person {
-      min-width: 44px;
-      height: 48px;
-      padding: 0 10px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-    }
-
-    .block {
-      display: flex;
-      gap: 6px;
-      padding: 6px;
-      border-radius: 16px;
-      border: 2px solid var(--accent);
-      background: rgba(15, 118, 110, 0.08);
-      transition: transform 220ms ease;
-    }
-
-    .block.bump {
-      transform: translateY(-4px) scale(1.03);
-    }
-
-    .word-wrap {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .letter {
-      width: 44px;
-      height: 54px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      transition: transform 280ms ease, background 280ms ease, opacity 280ms ease, box-shadow 280ms ease;
-    }
-
-    .letter.same {
-      background: #f7efe1;
-    }
-
-    .letter.flash {
-      transform: translateY(-4px) scale(1.06);
-      box-shadow: 0 10px 18px rgba(180, 83, 9, 0.16);
-    }
-
-    .demo-note-strong {
-      color: var(--ink);
-      font-weight: 700;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .control-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin: 18px 0;
+      align-items: end;
     }
 
     .control {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      min-width: 0;
+      min-width: 170px;
+      flex: 1 1 170px;
     }
 
     label {
@@ -308,9 +112,7 @@
       color: var(--muted);
     }
 
-    select,
-    input,
-    textarea {
+    select {
       width: 100%;
       padding: 10px 12px;
       border-radius: 14px;
@@ -320,70 +122,162 @@
       font: inherit;
     }
 
-    textarea {
-      min-height: 72px;
-      resize: vertical;
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), #155e75);
     }
 
-    .result {
-      padding: 16px;
-      border-radius: 18px;
-      background: #fffdf8;
+    button.secondary {
+      background: linear-gradient(135deg, var(--accent-2), #9a3412);
+    }
+
+    .stage {
+      min-height: 360px;
       border: 1px solid var(--line);
-      margin-top: 10px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fffdf9 0%, #f6efe2 100%);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1fr 0.75fr;
+      gap: 18px;
     }
 
-    .result strong {
-      display: block;
-      font-size: 1.28rem;
-      margin-bottom: 8px;
+    .urn-box,
+    .draw-box {
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.55);
+      min-width: 0;
+    }
+
+    .ball-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .draw-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .ball,
+    .draw-slot {
+      height: 54px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      transition: transform 220ms ease, opacity 220ms ease, box-shadow 220ms ease;
+    }
+
+    .ball.red,
+    .draw-slot.red {
+      background: linear-gradient(135deg, #ef4444, var(--red));
+    }
+
+    .ball.blue,
+    .draw-slot.blue {
+      background: linear-gradient(135deg, #3b82f6, var(--blue));
+    }
+
+    .ball.green,
+    .draw-slot.green {
+      background: linear-gradient(135deg, #22c55e, var(--green));
+    }
+
+    .ball.pulse,
+    .draw-slot.pop {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 10px 18px rgba(31, 41, 51, 0.18);
+    }
+
+    .ball.faded {
+      opacity: 0.18;
+      transform: scale(0.94);
+    }
+
+    .draw-slot.empty {
+      background: #f4ede2;
+      border: 1px dashed var(--line);
+      color: var(--muted);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .card {
+      padding: 18px;
     }
 
     .formula {
       font-family: "Courier New", monospace;
-      background: #f6f0e3;
-      padding: 14px 16px;
+      background: #f7f1e6;
       border-left: 4px solid var(--accent);
       border-radius: 14px;
+      padding: 14px 16px;
       margin: 12px 0;
       overflow-wrap: anywhere;
     }
 
-    .note {
-      color: var(--muted);
-      font-size: 0.96rem;
+    .record-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: #efe7d7;
-      border: 1px solid var(--line);
-      margin: 4px 6px 0 0;
-      font-size: 0.92rem;
+    .record-card {
+      background: var(--panel);
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
     }
 
-    .ok {
-      color: var(--good);
-      font-weight: 700;
+    .record-card.active {
+      outline: 2px solid var(--accent);
+      outline-offset: 0;
     }
 
-    .warn {
-      color: var(--warn);
-      font-weight: 700;
+    ul {
+      margin: 0;
+      padding-left: 1.15rem;
+      line-height: 1.55;
     }
 
-    @media (max-width: 920px) {
-      .guide,
-      .demo-grid,
-      .grid,
-      .control-grid {
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 980px) {
+      .lab,
+      .notes,
+      .record-grid,
+      .summary {
         grid-template-columns: 1fr;
       }
 
-      .demo-card.wide {
-        grid-column: span 1;
+      .stage {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -392,376 +286,148 @@
   <main>
     <section class="hero">
       <a class="home-link" href="../index.html">Back to Home</a>
-      <h1>Probabilistic Methods - List 02 Model Explorer</h1>
-      <p>
-        This page is designed for tutorial presentation. It helps explain how to choose the
-        correct counting model and how to evaluate the main combinatorial formulas used in
-        probability problems.
+      <h1>List 02 - Urn Recording Lab</h1>
+      <p class="muted">
+        One animated task for List 02. The physical draw is the same, but the number of outcomes
+        changes depending on what you record.
       </p>
     </section>
 
-    <section class="guide">
-      <article class="guide-card">
-        <h2>What To Understand</h2>
-        <ul class="note">
-          <li>what is being counted</li>
-          <li>order or no order</li>
-          <li>repetition or no repetition</li>
-        </ul>
-      </article>
-
-      <article class="guide-card">
-        <h2>What To Visualize</h2>
-        <ul class="note">
-          <li>line of slots</li>
-          <li>round table</li>
-          <li>selected group / podium / code boxes</li>
-        </ul>
-      </article>
-
-      <article class="guide-card">
-        <h2>What To Say</h2>
-        <ul class="note">
-          <li>"We count ..."</li>
-          <li>"Order? repetition?"</li>
-          <li>"So the model is ..."</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="grid">
+    <section class="lab">
       <article class="panel">
-        <h2>Decision Assistant</h2>
-        <p>
-          Answer the same questions that appear in the lecture notes: are we using all
-          objects, does order matter, is repetition allowed, are some objects identical, and
-          is the arrangement circular?
-        </p>
-
-        <div class="control-grid">
-          <div class="control" id="wrap-use-all">
-            <label for="use-all">Are we using all objects?</label>
-            <select id="use-all">
-              <option value="yes" selected>Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-
-          <div class="control" id="wrap-is-circle">
-            <label for="is-circle">Are objects arranged in a circle?</label>
-            <select id="is-circle">
-              <option value="no" selected>No</option>
-              <option value="yes">Yes</option>
-            </select>
-          </div>
-
-          <div class="control" id="wrap-order">
-            <label for="order-matters">Does order matter?</label>
-            <select id="order-matters">
-              <option value="yes" selected>Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-
-          <div class="control" id="wrap-repetition">
-            <label for="repetition-allowed">Is repetition allowed?</label>
-            <select id="repetition-allowed">
-              <option value="no" selected>No</option>
-              <option value="yes">Yes</option>
-            </select>
-          </div>
-
-          <div class="control" id="wrap-identical">
-            <label for="identical-objects">Are some objects identical?</label>
-            <select id="identical-objects">
-              <option value="no" selected>No</option>
-              <option value="yes">Yes</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="result">
-          <strong id="model-name">Permutation</strong>
-          <p id="decision-path" class="note"></p>
-          <div id="model-formula" class="formula">n!</div>
-          <p id="model-explanation" class="note"></p>
-          <div id="model-tags"></div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2>Formula Calculator</h2>
-        <p>
-          Choose a counting model and enter the parameters. For permutations with repeated
-          elements, type the multiplicities separated by commas, for example <code>3,3,2</code>.
-        </p>
-
-        <div class="control-grid">
-          <div class="control" id="wrap-calc-model">
-            <label for="calc-model">Model</label>
-            <select id="calc-model">
-              <option value="permutation">Permutation</option>
-              <option value="circular">Circular permutation</option>
-              <option value="combination">Combination</option>
-              <option value="kpermutation">k-permutation</option>
-              <option value="sequence">Sequence with repetition</option>
-              <option value="repeated">Permutation with repeated elements</option>
-            </select>
-          </div>
-
-          <div class="control" id="wrap-calc-n">
-            <label for="calc-n">n</label>
-            <input id="calc-n" type="number" min="0" value="7">
-          </div>
-
-          <div class="control" id="wrap-calc-k">
-            <label for="calc-k">k</label>
-            <input id="calc-k" type="number" min="0" value="3">
-          </div>
-
-          <div class="control" id="wrap-calc-repeats">
-            <label for="calc-repeats">Repeated multiplicities</label>
-            <input id="calc-repeats" type="text" value="3,3,2">
-          </div>
-        </div>
-
-        <div class="result">
-          <strong id="calc-title">Permutation</strong>
-          <p id="calc-path" class="note"></p>
-          <div id="calc-formula" class="formula">7! = 5040</div>
-          <p id="calc-note" class="note"></p>
-        </div>
-      </article>
-    </section>
-
-    <section class="demo-grid">
-      <article class="demo-card">
-        <h2>Ordered vs Unordered</h2>
-        <p class="note">Autoplay demo for sequence, combination, and <code>k</code>-permutation.</p>
+        <h2>Animation</h2>
 
         <div class="controls">
           <div class="control">
-            <label for="demo-mode">Demo mode</label>
-            <select id="demo-mode">
-              <option value="sequence">Sequence with repetition</option>
-              <option value="kpermutation">k-permutation</option>
-              <option value="combination">Combination</option>
+            <label for="focus-mode">Highlight this recording rule</label>
+            <select id="focus-mode">
+              <option value="actual_unordered">Actual balls, order ignored</option>
+              <option value="colors_ordered">Colors only, order recorded</option>
+              <option value="colors_unordered">Colors only, order ignored</option>
             </select>
           </div>
-          <button id="demo-run">Run Demo</button>
+          <button id="draw-one">Draw 1</button>
+          <button id="draw-three">Draw 3</button>
+          <button id="auto-demo">Auto Demo</button>
+          <button id="reset" class="secondary">Reset</button>
         </div>
 
         <div class="stage">
-          <div id="demo-stage"></div>
-        </div>
+          <div class="urn-box">
+            <h3>Urn</h3>
+            <p class="muted">5 red, 4 blue, 3 green balls</p>
+            <div id="urn-grid" class="ball-grid"></div>
+          </div>
 
-        <p id="demo-caption" class="note"></p>
+          <div class="draw-box">
+            <h3>Drawn Balls</h3>
+            <p class="muted">Three draws without replacement</p>
+            <div id="draw-grid" class="draw-grid"></div>
+          </div>
+        </div>
       </article>
 
-      <article class="demo-card">
-        <h2>Circular Rotation</h2>
-        <p class="note">Same relative seating, different absolute rotation. The animation repeats automatically.</p>
+      <article class="panel">
+        <h2>Current Recording</h2>
+        <div class="formula" id="focus-formula">C(12,3) = 220</div>
 
-        <div class="controls">
-          <button id="rotate-table">Rotate Table</button>
-        </div>
-
-        <div class="stage">
-          <div class="table-wrap">
-            <div id="table-ring" class="table-ring">
-              <div class="seat" style="left: 50%; top: 10%;">A</div>
-              <div class="seat" style="left: 84%; top: 30%;">B</div>
-              <div class="seat" style="left: 84%; top: 70%;">C</div>
-              <div class="seat" style="left: 50%; top: 90%;">D</div>
-              <div class="seat" style="left: 16%; top: 70%;">E</div>
-              <div class="seat" style="left: 16%; top: 30%;">F</div>
-            </div>
+        <div class="summary">
+          <div class="card">
+            Focus mode
+            <strong id="focus-title">Actual balls, order ignored</strong>
+          </div>
+          <div class="card">
+            Current recorded outcome
+            <strong id="focus-outcome">-</strong>
+          </div>
+          <div class="card">
+            Total possible outcomes
+            <strong id="focus-total">220</strong>
           </div>
         </div>
 
-        <p class="note"><span class="demo-note-strong">Point:</span> rotating the whole table does not create a new circular arrangement.</p>
+        <p id="focus-note" class="muted" style="margin-top:16px;"></p>
+      </article>
+    </section>
+
+    <section id="record-grid" class="record-grid"></section>
+
+    <section class="notes">
+      <article class="card">
+        <h2>What This Teaches</h2>
+        <ul>
+          <li>same physical draw</li>
+          <li>different recording rule</li>
+          <li>different sample space size</li>
+        </ul>
       </article>
 
-      <article class="demo-card">
-        <h2>Block Method</h2>
-        <p class="note">Two people stay together, so first treat them as one block. The line reshuffles automatically.</p>
-
-        <div class="controls">
-          <button id="shuffle-block">Shuffle Line</button>
-        </div>
-
-        <div class="stage">
-          <div id="block-stage" class="line-wrap"></div>
-        </div>
-
-        <p class="note"><span class="demo-note-strong">Point:</span> count one merged block in the line, then multiply by the internal order.</p>
+      <article class="card">
+        <h2>What To Watch</h2>
+        <ul>
+          <li>actual ball labels matter or not</li>
+          <li>order matters or not</li>
+          <li>colors only vs actual balls</li>
+        </ul>
       </article>
 
-      <article class="demo-card wide">
-        <h2>Repeated Elements</h2>
-        <p class="note">Why equal letters reduce the number of visible arrangements.</p>
-
-        <div class="controls">
-          <button id="repeat-demo">Run Swap Demo</button>
-        </div>
-
-        <div class="stage">
-          <div id="repeat-stage" class="word-wrap"></div>
-        </div>
-
-        <p id="repeat-caption" class="note"></p>
+      <article class="card">
+        <h2>What To Say In Class</h2>
+        <ul>
+          <li>"The draw is the same, but the recording rule changes."</li>
+          <li>"That changes what one outcome means."</li>
+          <li>"So the counting model and total number of outcomes change too."</li>
+        </ul>
       </article>
     </section>
   </main>
 
   <script>
-    const useAll = document.getElementById("use-all");
-    const isCircle = document.getElementById("is-circle");
-    const orderMatters = document.getElementById("order-matters");
-    const repetitionAllowed = document.getElementById("repetition-allowed");
-    const identicalObjects = document.getElementById("identical-objects");
-    const wrapIsCircle = document.getElementById("wrap-is-circle");
-    const wrapOrder = document.getElementById("wrap-order");
-    const wrapRepetition = document.getElementById("wrap-repetition");
-    const wrapIdentical = document.getElementById("wrap-identical");
+    const focusMode = document.getElementById("focus-mode");
+    const drawOneButton = document.getElementById("draw-one");
+    const drawThreeButton = document.getElementById("draw-three");
+    const autoDemoButton = document.getElementById("auto-demo");
+    const resetButton = document.getElementById("reset");
+    const urnGrid = document.getElementById("urn-grid");
+    const drawGrid = document.getElementById("draw-grid");
+    const recordGrid = document.getElementById("record-grid");
+    const focusTitle = document.getElementById("focus-title");
+    const focusOutcome = document.getElementById("focus-outcome");
+    const focusTotal = document.getElementById("focus-total");
+    const focusFormula = document.getElementById("focus-formula");
+    const focusNote = document.getElementById("focus-note");
 
-    const modelName = document.getElementById("model-name");
-    const decisionPath = document.getElementById("decision-path");
-    const modelFormula = document.getElementById("model-formula");
-    const modelExplanation = document.getElementById("model-explanation");
-    const modelTags = document.getElementById("model-tags");
+    const allBalls = [
+      { id: "R1", color: "red" }, { id: "R2", color: "red" }, { id: "R3", color: "red" }, { id: "R4", color: "red" }, { id: "R5", color: "red" },
+      { id: "B1", color: "blue" }, { id: "B2", color: "blue" }, { id: "B3", color: "blue" }, { id: "B4", color: "blue" },
+      { id: "G1", color: "green" }, { id: "G2", color: "green" }, { id: "G3", color: "green" }
+    ];
 
-    const calcModel = document.getElementById("calc-model");
-    const calcN = document.getElementById("calc-n");
-    const calcK = document.getElementById("calc-k");
-    const calcRepeats = document.getElementById("calc-repeats");
-    const wrapCalcN = document.getElementById("wrap-calc-n");
-    const wrapCalcK = document.getElementById("wrap-calc-k");
-    const wrapCalcRepeats = document.getElementById("wrap-calc-repeats");
-    const calcTitle = document.getElementById("calc-title");
-    const calcPath = document.getElementById("calc-path");
-    const calcFormula = document.getElementById("calc-formula");
-    const calcNote = document.getElementById("calc-note");
-    const demoMode = document.getElementById("demo-mode");
-    const demoRun = document.getElementById("demo-run");
-    const demoStage = document.getElementById("demo-stage");
-    const demoCaption = document.getElementById("demo-caption");
-    const rotateTable = document.getElementById("rotate-table");
-    const tableRing = document.getElementById("table-ring");
-    const shuffleBlock = document.getElementById("shuffle-block");
-    const blockStage = document.getElementById("block-stage");
-    const repeatDemo = document.getElementById("repeat-demo");
-    const repeatStage = document.getElementById("repeat-stage");
-    const repeatCaption = document.getElementById("repeat-caption");
-
-    let orderedDemoTimer = null;
-    let rotateTimer = null;
-    let blockTimer = null;
-    let repeatTimer = null;
-
-    function factorialBigInt(n) {
-      if (n < 0) {
-        return null;
+    const modeMeta = {
+      actual_unordered: {
+        title: "Actual balls, order ignored",
+        total: "220",
+        formula: "C(12,3) = 220",
+        note: "We care which three labeled balls were chosen, but not the order."
+      },
+      colors_ordered: {
+        title: "Colors only, order recorded",
+        total: "3^3 = 27",
+        formula: "3^3 = 27",
+        note: "We record only the color sequence, for example (R,B,G)."
+      },
+      colors_unordered: {
+        title: "Colors only, order ignored",
+        total: "C(3+3-1,3) = 10",
+        formula: "C(5,3) = 10",
+        note: "We record only the multiset of colors, for example {R,R,G}."
       }
-      let result = 1n;
-      for (let i = 2n; i <= BigInt(n); i += 1n) {
-        result *= i;
-      }
-      return result;
-    }
+    };
 
-    function combinationBigInt(n, k) {
-      if (k < 0 || k > n) {
-        return null;
-      }
-      const kk = Math.min(k, n - k);
-      let result = 1n;
-      for (let i = 1; i <= kk; i += 1) {
-        result = (result * BigInt(n - kk + i)) / BigInt(i);
-      }
-      return result;
-    }
-
-    function permutationBigInt(n, k) {
-      if (k < 0 || k > n) {
-        return null;
-      }
-      let result = 1n;
-      for (let i = 0; i < k; i += 1) {
-        result *= BigInt(n - i);
-      }
-      return result;
-    }
-
-    function powerBigInt(base, exp) {
-      if (exp < 0) {
-        return null;
-      }
-      let result = 1n;
-      for (let i = 0; i < exp; i += 1) {
-        result *= BigInt(base);
-      }
-      return result;
-    }
-
-    function formatBigInt(value) {
-      return value === null ? "undefined" : value.toString();
-    }
-
-    function setTags(items) {
-      modelTags.innerHTML = "";
-      items.forEach((item) => {
-        const span = document.createElement("span");
-        span.className = "badge";
-        span.textContent = item;
-        modelTags.appendChild(span);
-      });
-    }
-
-    function showElement(element, visible) {
-      element.classList.toggle("hidden", !visible);
-    }
-
-    function syncDecisionControls() {
-      const all = useAll.value === "yes";
-      const order = orderMatters.value === "yes";
-
-      showElement(wrapIsCircle, all);
-      showElement(wrapIdentical, all);
-      showElement(wrapOrder, !all);
-      showElement(wrapRepetition, !all && order);
-
-      if (all) {
-        orderMatters.value = "yes";
-        repetitionAllowed.value = "no";
-      } else {
-        isCircle.value = "no";
-        identicalObjects.value = "no";
-        if (!order) {
-          repetitionAllowed.value = "no";
-        }
-      }
-
-      if (all && isCircle.value === "yes") {
-        orderMatters.value = "yes";
-      }
-    }
-
-    function syncCalculatorControls() {
-      const model = calcModel.value;
-
-      showElement(wrapCalcN, model !== "repeated");
-      showElement(wrapCalcK, model === "combination" || model === "kpermutation" || model === "sequence");
-      showElement(wrapCalcRepeats, model === "repeated");
-
-      if (model === "repeated" && !calcRepeats.value.trim()) {
-        calcRepeats.value = "3,3,2";
-      }
-    }
-
-    function randomChoice(items) {
-      return items[Math.floor(Math.random() * items.length)];
-    }
+    let remaining = [];
+    let drawn = [];
+    let autoTimer = null;
+    let stepLock = false;
 
     function shuffle(items) {
       const copy = [...items];
@@ -772,382 +438,163 @@
       return copy;
     }
 
-    function renderDemo(mode) {
-      demoStage.innerHTML = "";
-      const letters = ["A", "B", "C", "D"];
+    function renderUrn(highlightId = null) {
+      urnGrid.innerHTML = "";
+      allBalls.forEach((ball) => {
+        const node = document.createElement("div");
+        node.className = `ball ${ball.color}`;
+        node.textContent = ball.id;
+        if (!remaining.find((item) => item.id === ball.id)) {
+          node.classList.add("faded");
+        }
+        if (highlightId === ball.id) {
+          node.classList.add("pulse");
+        }
+        urnGrid.appendChild(node);
+      });
+    }
 
-      if (mode === "combination") {
-        const selected = shuffle(letters).slice(0, 3).sort();
-        const row = document.createElement("div");
-        row.className = "chip-row";
-        selected.forEach((letter) => {
-          const chip = document.createElement("div");
-          chip.className = "chip sorted active";
-          chip.textContent = letter;
-          row.appendChild(chip);
-        });
-        demoStage.appendChild(row);
-        demoCaption.textContent = "Combination: choose a set. Order is ignored.";
+    function renderDraw(highlightIndex = null) {
+      drawGrid.innerHTML = "";
+      for (let i = 0; i < 3; i += 1) {
+        const ball = drawn[i];
+        const node = document.createElement("div");
+        if (!ball) {
+          node.className = "draw-slot empty";
+          node.textContent = "slot";
+        } else {
+          node.className = `draw-slot ${ball.color}`;
+          node.textContent = ball.id;
+          if (highlightIndex === i) {
+            node.classList.add("pop");
+          }
+        }
+        drawGrid.appendChild(node);
+      }
+    }
+
+    function currentOutcome(mode) {
+      if (drawn.length === 0) {
+        return "-";
+      }
+
+      if (mode === "actual_unordered") {
+        const ids = [...drawn].map((ball) => ball.id).sort();
+        return `{${ids.join(", ")}}`;
+      }
+
+      if (mode === "colors_ordered") {
+        const colors = drawn.map((ball) => ball.id[0]);
+        return `(${colors.join(", ")})`;
+      }
+
+      const colors = drawn.map((ball) => ball.id[0]).sort();
+      return `{${colors.join(", ")}}`;
+    }
+
+    function renderRecords() {
+      recordGrid.innerHTML = "";
+      const active = focusMode.value;
+
+      Object.entries(modeMeta).forEach(([mode, meta]) => {
+        const card = document.createElement("article");
+        card.className = `record-card${mode === active ? " active" : ""}`;
+        card.innerHTML = `
+          <h2>${meta.title}</h2>
+          <div class="formula">${meta.formula}</div>
+          <p class="muted"><strong>Recorded outcome:</strong> ${currentOutcome(mode)}</p>
+          <p class="muted">${meta.note}</p>
+        `;
+        recordGrid.appendChild(card);
+      });
+    }
+
+    function updateFocus() {
+      const meta = modeMeta[focusMode.value];
+      focusTitle.textContent = meta.title;
+      focusOutcome.textContent = currentOutcome(focusMode.value);
+      focusTotal.textContent = meta.total;
+      focusFormula.textContent = meta.formula;
+      focusNote.textContent = meta.note;
+      renderRecords();
+    }
+
+    function resetAll() {
+      remaining = shuffle(allBalls);
+      drawn = [];
+      stepLock = false;
+      renderUrn();
+      renderDraw();
+      updateFocus();
+    }
+
+    function drawOne(animated = true) {
+      if (stepLock || drawn.length >= 3 || remaining.length === 0) {
         return;
       }
 
-      const row = document.createElement("div");
-      row.className = "slot-row";
-      const slots = [];
-      for (let i = 0; i < 3; i += 1) {
-        const slot = document.createElement("div");
-        slot.className = "slot";
-        slot.textContent = "?";
-        row.appendChild(slot);
-        slots.push(slot);
-      }
-      demoStage.appendChild(row);
+      const next = remaining[Math.floor(Math.random() * remaining.length)];
+      const nextIndex = remaining.findIndex((ball) => ball.id === next.id);
+      stepLock = true;
+      renderUrn(next.id);
 
-      let pool = [...letters];
-      const picks = [];
-      for (let i = 0; i < 3; i += 1) {
-        let next;
-        if (mode === "sequence") {
-          next = randomChoice(letters);
-        } else {
-          pool = shuffle(pool);
-          next = pool.shift();
-        }
-        picks.push(next);
-      }
-
-      slots.forEach((slot, index) => {
-        setTimeout(() => {
-          slot.textContent = picks[index];
-          slot.classList.add("active");
-        }, 220 * (index + 1));
-      });
-
-      demoCaption.textContent = mode === "sequence"
-        ? "Sequence with repetition: ordered slots, symbols may repeat."
-        : "k-permutation: ordered slots, no symbol repeats.";
+      setTimeout(() => {
+        remaining.splice(nextIndex, 1);
+        drawn.push(next);
+        renderUrn();
+        renderDraw(drawn.length - 1);
+        updateFocus();
+        stepLock = false;
+      }, animated ? 260 : 0);
     }
 
-    function startOrderedAutoplay() {
-      if (orderedDemoTimer) {
-        clearInterval(orderedDemoTimer);
+    function drawThreeSequence() {
+      if (autoTimer && drawn.length === 3) {
+        resetAll();
       }
-      orderedDemoTimer = setInterval(() => renderDemo(demoMode.value), 2800);
+      if (drawn.length === 3) {
+        return;
+      }
+      drawOne(true);
+      if (drawn.length < 2) {
+        setTimeout(() => drawOne(true), 420);
+      }
+      if (drawn.length < 1) {
+        setTimeout(() => drawOne(true), 840);
+      }
     }
 
-    function renderBlockLine() {
-      blockStage.innerHTML = "";
-      const others = shuffle(["C", "D", "E", "F", "G", "H"]);
-      const blockMembers = Math.random() < 0.5 ? ["A", "B"] : ["B", "A"];
-      const units = shuffle([
-        ...others.slice(0, 3),
-        "__BLOCK__",
-        ...others.slice(3)
-      ]);
-
-      units.forEach((unit) => {
-        if (unit === "__BLOCK__") {
-          const block = document.createElement("div");
-          block.className = "block bump";
-          blockMembers.forEach((letter) => {
-            const person = document.createElement("div");
-            person.className = "person";
-            person.textContent = letter;
-            block.appendChild(person);
-          });
-          blockStage.appendChild(block);
-        } else {
-          const person = document.createElement("div");
-          person.className = "person";
-          person.textContent = unit;
-          blockStage.appendChild(person);
-        }
-      });
-    }
-
-    function startRotationAutoplay() {
-      if (rotateTimer) {
-        clearInterval(rotateTimer);
+    function toggleAutoDemo() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        autoDemoButton.textContent = "Auto Demo";
+        return;
       }
-      rotateTimer = setInterval(() => {
-        tableRing.classList.remove("spin");
-        void tableRing.offsetWidth;
-        tableRing.classList.add("spin");
+
+      autoDemoButton.textContent = "Pause";
+      resetAll();
+      drawThreeSequence();
+      autoTimer = setInterval(() => {
+        resetAll();
+        drawThreeSequence();
       }, 3200);
     }
 
-    function startBlockAutoplay() {
-      if (blockTimer) {
-        clearInterval(blockTimer);
+    focusMode.addEventListener("change", updateFocus);
+    drawOneButton.addEventListener("click", () => drawOne(true));
+    drawThreeButton.addEventListener("click", drawThreeSequence);
+    autoDemoButton.addEventListener("click", toggleAutoDemo);
+    resetButton.addEventListener("click", () => {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        autoDemoButton.textContent = "Auto Demo";
       }
-      blockTimer = setInterval(renderBlockLine, 3000);
-    }
-
-    function renderRepeatedDemo() {
-      repeatStage.innerHTML = "";
-      const letters = ["B", "A", "N", "A", "N", "A"];
-      const nodes = [];
-
-      letters.forEach((letter, index) => {
-        const node = document.createElement("div");
-        node.className = "letter";
-        if (letter === "A") {
-          node.classList.add("same");
-        }
-        node.textContent = letter;
-        node.dataset.index = String(index);
-        repeatStage.appendChild(node);
-        nodes.push(node);
-      });
-
-      const sameSwap = [1, 3];
-      const differentSwap = [0, 1];
-
-      setTimeout(() => {
-        nodes[sameSwap[0]].classList.add("flash");
-        nodes[sameSwap[1]].classList.add("flash");
-        repeatCaption.textContent = "Swap two A letters: visually nothing changes, so it is not a new arrangement.";
-      }, 250);
-
-      setTimeout(() => {
-        nodes[sameSwap[0]].classList.remove("flash");
-        nodes[sameSwap[1]].classList.remove("flash");
-      }, 1100);
-
-      setTimeout(() => {
-        const first = nodes[differentSwap[0]];
-        const second = nodes[differentSwap[1]];
-        first.classList.add("flash");
-        second.classList.add("flash");
-        const firstText = first.textContent;
-        first.textContent = second.textContent;
-        second.textContent = firstText;
-        repeatCaption.textContent = "Swap different letters: the word changes, so this does create a new visible arrangement.";
-      }, 1500);
-
-      setTimeout(() => {
-        nodes[differentSwap[0]].classList.remove("flash");
-        nodes[differentSwap[1]].classList.remove("flash");
-      }, 2500);
-    }
-
-    function startRepeatAutoplay() {
-      if (repeatTimer) {
-        clearInterval(repeatTimer);
-      }
-      repeatTimer = setInterval(renderRepeatedDemo, 3600);
-    }
-
-    function updateDecisionAssistant() {
-      syncDecisionControls();
-
-      const all = useAll.value === "yes";
-      const circle = isCircle.value === "yes";
-      const order = orderMatters.value === "yes";
-      const repetition = repetitionAllowed.value === "yes";
-      const identical = identicalObjects.value === "yes";
-
-      let name = "";
-      let formula = "";
-      let explanation = "";
-      let tags = [];
-      let path = [];
-
-      if (all) {
-        path.push("all objects");
-        if (circle) {
-          path.push("circle");
-          if (identical) {
-            name = "Circular arrangement with identical objects";
-            formula = "No single standard formula in this simple decision tree";
-            explanation = "Circle + identical objects usually needs a custom case analysis.";
-            tags = ["all objects", "circle", "rotations equivalent", "special case"];
-          } else {
-            name = "Circular permutation";
-            formula = "(n - 1)!";
-            explanation = "Use all objects around a circle. Rotations are the same.";
-            tags = ["all objects", "circle", "distinct objects"];
-          }
-        } else if (identical) {
-          path.push("line");
-          path.push("identical objects");
-          name = "Permutation with repeated elements";
-          formula = "n! / (n1! n2! ... nr!)";
-          explanation = "Use all objects in a line, but equal objects do not create new arrangements.";
-          tags = ["all objects", "linear", "identical objects"];
-        } else {
-          path.push("line");
-          path.push("distinct objects");
-          name = "Permutation";
-          formula = "n!";
-          explanation = "Use all distinct objects in a line.";
-          tags = ["all objects", "linear", "distinct objects"];
-        }
-      } else if (!order) {
-        path.push("some objects");
-        path.push("order ignored");
-        name = "Combination";
-        formula = "C(n, k) = n! / (k! (n-k)!)";
-        explanation = "Choose some objects. Order does not matter.";
-        tags = ["some objects", "unordered", "no repetition"];
-      } else if (repetition) {
-        path.push("some objects");
-        path.push("order matters");
-        path.push("repetition allowed");
-        name = "Sequence with repetition";
-        formula = "n^k";
-        explanation = "Ordered slots, each slot can reuse the same symbols.";
-        tags = ["some objects", "ordered", "repetition allowed"];
-      } else {
-        path.push("some objects");
-        path.push("order matters");
-        path.push("no repetition");
-        name = "k-permutation";
-        formula = "P(n, k) = n! / (n-k)!";
-        explanation = "Ordered selection without repetition.";
-        tags = ["some objects", "ordered", "no repetition"];
-      }
-
-      modelName.textContent = name;
-      decisionPath.textContent = `Path: ${path.join(" -> ")}`;
-      modelFormula.textContent = formula;
-      modelExplanation.textContent = explanation;
-      setTags(tags);
-    }
-
-    function parseIntSafe(value) {
-      const parsed = Number(value);
-      return Number.isInteger(parsed) ? parsed : NaN;
-    }
-
-    function updateCalculator() {
-      syncCalculatorControls();
-
-      const model = calcModel.value;
-      const n = parseIntSafe(calcN.value);
-      const k = parseIntSafe(calcK.value);
-      const repeatsText = calcRepeats.value.trim();
-
-      let title = "";
-      let formula = "";
-      let note = "";
-      let path = "";
-
-      if (model !== "repeated" && (!Number.isInteger(n) || n < 0)) {
-        calcTitle.textContent = "Invalid input";
-        calcFormula.textContent = "n must be a non-negative integer";
-        calcPath.textContent = "";
-        calcNote.textContent = "";
-        return;
-      }
-
-      if ((model === "combination" || model === "kpermutation" || model === "sequence") && (!Number.isInteger(k) || k < 0)) {
-        calcTitle.textContent = "Invalid input";
-        calcFormula.textContent = "k must be a non-negative integer";
-        calcPath.textContent = "";
-        calcNote.textContent = "";
-        return;
-      }
-
-      if (model === "permutation") {
-        title = "Permutation";
-        const value = factorialBigInt(n);
-        formula = `${n}! = ${formatBigInt(value)}`;
-        path = "Need only n";
-        note = "All distinct objects are used.";
-      } else if (model === "circular") {
-        title = "Circular permutation";
-        if (n === 0) {
-          formula = "Not used for n = 0";
-          note = "Circular permutations are intended for at least one object.";
-        } else {
-          const value = factorialBigInt(n - 1);
-          formula = `(${n} - 1)! = ${formatBigInt(value)}`;
-          note = "Rotations are the same arrangement.";
-        }
-        path = "Need only n";
-      } else if (model === "combination") {
-        title = "Combination";
-        const value = combinationBigInt(n, k);
-        formula = value === null
-          ? `C(${n}, ${k}) is undefined for k > n`
-          : `C(${n}, ${k}) = ${formatBigInt(value)}`;
-        path = "Need n and k";
-        note = "Choose k objects, order ignored.";
-      } else if (model === "kpermutation") {
-        title = "k-permutation";
-        const value = permutationBigInt(n, k);
-        formula = value === null
-          ? `P(${n}, ${k}) is undefined for k > n`
-          : `P(${n}, ${k}) = ${formatBigInt(value)}`;
-        path = "Need n and k";
-        note = "Ordered selection without repetition.";
-      } else if (model === "sequence") {
-        title = "Sequence with repetition";
-        const value = powerBigInt(n, k);
-        formula = `${n}^${k} = ${formatBigInt(value)}`;
-        path = "Need n and k";
-        note = "k ordered slots, each with n choices.";
-      } else {
-        title = "Permutation with repeated elements";
-        const parts = repeatsText === ""
-          ? []
-          : repeatsText.split(",").map((piece) => Number(piece.trim())).filter((piece) => Number.isInteger(piece) && piece >= 0);
-        const sum = parts.reduce((acc, value) => acc + value, 0);
-        path = "Need only multiplicities";
-
-        if (parts.length === 0) {
-          formula = "Enter multiplicities such as 3,3,2";
-          note = "Example: BANANA -> 3,2,1";
-        } else {
-          let denominator = 1n;
-          parts.forEach((part) => {
-            denominator *= factorialBigInt(part);
-          });
-          const numerator = factorialBigInt(sum);
-          const value = numerator / denominator;
-          formula = `${sum}! / (${parts.map((part) => `${part}!`).join(" ")}) = ${formatBigInt(value)}`;
-          note = `Auto-detected n = ${sum} from the multiplicities.`;
-        }
-      }
-
-      calcTitle.textContent = title;
-      calcPath.textContent = path;
-      calcFormula.textContent = formula;
-      calcNote.textContent = note;
-    }
-
-    [useAll, isCircle, orderMatters, repetitionAllowed, identicalObjects].forEach((element) => {
-      element.addEventListener("change", updateDecisionAssistant);
+      resetAll();
     });
 
-    [calcModel, calcN, calcK, calcRepeats].forEach((element) => {
-      element.addEventListener("input", updateCalculator);
-      element.addEventListener("change", updateCalculator);
-    });
-
-    demoRun.addEventListener("click", () => renderDemo(demoMode.value));
-    demoMode.addEventListener("change", () => {
-      renderDemo(demoMode.value);
-      startOrderedAutoplay();
-    });
-    rotateTable.addEventListener("click", () => {
-      tableRing.classList.remove("spin");
-      void tableRing.offsetWidth;
-      tableRing.classList.add("spin");
-    });
-    shuffleBlock.addEventListener("click", renderBlockLine);
-    repeatDemo.addEventListener("click", renderRepeatedDemo);
-
-    updateDecisionAssistant();
-    updateCalculator();
-    renderDemo(demoMode.value);
-    renderBlockLine();
-    renderRepeatedDemo();
-    startOrderedAutoplay();
-    startRotationAutoplay();
-    startBlockAutoplay();
-    startRepeatAutoplay();
+    resetAll();
   </script>
 </body>
 </html>

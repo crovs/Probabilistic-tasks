@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Probabilistic Methods - List 1 Visualizations</title>
+  <title>List 01 - Buffon's Needle Lab</title>
   <style>
     :root {
-      --bg: #f4efe6;
-      --panel: #fffaf2;
+      --bg: #f6efe5;
+      --panel: rgba(255, 251, 245, 0.92);
       --ink: #1f2933;
-      --muted: #5b6470;
+      --muted: #5d6672;
       --accent: #0f766e;
       --accent-2: #c2410c;
-      --line: #d5c7ad;
-      --ok: #15803d;
-      --bad: #b91c1c;
-      --shadow: 0 18px 40px rgba(36, 33, 28, 0.12);
+      --line: #d8c8ac;
+      --hit: #b91c1c;
+      --miss: #15803d;
+      --shadow: 0 18px 42px rgba(34, 28, 20, 0.12);
     }
 
     * {
@@ -27,9 +27,9 @@
       font-family: Georgia, "Times New Roman", serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 30%),
         radial-gradient(circle at top right, rgba(194, 65, 12, 0.10), transparent 24%),
-        linear-gradient(180deg, #f8f4ec 0%, var(--bg) 100%);
+        linear-gradient(180deg, #fbf7f0 0%, var(--bg) 100%);
     }
 
     main {
@@ -38,29 +38,18 @@
       padding: 32px 20px 48px;
     }
 
-    h1, h2, h3 {
-      margin: 0 0 12px;
-      line-height: 1.1;
-    }
-
-    p {
-      margin: 0 0 12px;
-      line-height: 1.55;
-    }
-
-    .hero {
-      padding: 28px;
-      border: 1px solid rgba(31, 41, 51, 0.08);
+    .hero,
+    .panel,
+    .note-card {
+      background: var(--panel);
+      border: 1px solid rgba(31, 41, 51, 0.10);
       border-radius: 24px;
-      background: rgba(255, 250, 242, 0.82);
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
     }
 
-    .hero p {
-      max-width: 860px;
-      color: var(--muted);
-      font-size: 1.05rem;
+    .hero {
+      padding: 28px;
     }
 
     .home-link {
@@ -75,43 +64,47 @@
       font-size: 0.92rem;
     }
 
-    .grid {
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.55;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .lab {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1.35fr 0.85fr;
       gap: 22px;
       margin-top: 24px;
     }
 
-    .guide {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 24px;
-    }
-
-    .guide-card {
-      background: var(--panel);
-      border: 1px solid rgba(31, 41, 51, 0.10);
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
     .panel {
-      background: var(--panel);
-      border: 1px solid rgba(31, 41, 51, 0.10);
-      border-radius: 22px;
       padding: 22px;
-      box-shadow: var(--shadow);
       min-width: 0;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fffdf9 0%, #f6efe2 100%);
     }
 
     .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      align-items: center;
       margin: 16px 0 18px;
+      align-items: end;
     }
 
     .control {
@@ -119,14 +112,14 @@
       flex-direction: column;
       gap: 6px;
       min-width: 150px;
+      flex: 1 1 150px;
     }
 
     label {
-      font-size: 0.95rem;
       color: var(--muted);
+      font-size: 0.94rem;
     }
 
-    select,
     input[type="range"] {
       width: 100%;
     }
@@ -135,116 +128,76 @@
       border: 0;
       border-radius: 999px;
       padding: 10px 16px;
-      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       color: #fff;
       background: linear-gradient(135deg, var(--accent), #155e75);
-      transition: transform 160ms ease, filter 160ms ease;
     }
 
     button.secondary {
       background: linear-gradient(135deg, var(--accent-2), #9a3412);
     }
 
-    button:hover {
-      transform: translateY(-1px);
-      filter: saturate(1.06);
-    }
-
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .badge {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #f3ead8;
-      border: 1px solid var(--line);
-      font-family: "Courier New", monospace;
-      font-size: 0.92rem;
-    }
-
     .stats {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin: 14px 0 18px;
+      margin-top: 12px;
     }
 
     .stat {
+      background: #fffdf8;
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 14px;
-      background: #fffdf8;
     }
 
     .stat strong {
       display: block;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       margin-top: 6px;
     }
 
     .formula {
-      padding: 14px 16px;
-      background: #f7f2e9;
+      font-family: "Courier New", monospace;
+      background: #f7f1e6;
       border-left: 4px solid var(--accent);
       border-radius: 14px;
-      margin-bottom: 16px;
-      font-family: "Courier New", monospace;
+      padding: 14px 16px;
+      margin: 16px 0;
+      overflow-wrap: anywhere;
     }
 
-    canvas {
-      width: 100%;
-      height: auto;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, #fffdfa 0%, #f9f2e3 100%);
-      display: block;
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
     }
 
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 0.95rem;
+    .note-card {
+      padding: 20px;
     }
 
-    .legend span::before {
-      content: "";
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      margin-right: 6px;
-      border-radius: 999px;
-      vertical-align: middle;
+    ul {
+      margin: 0;
+      padding-left: 1.15rem;
+      line-height: 1.55;
     }
 
-    .legend .hit::before {
-      background: var(--bad);
+    .result-hit {
+      color: var(--hit);
+      font-weight: 700;
     }
 
-    .legend .miss::before {
-      background: var(--ok);
+    .result-miss {
+      color: var(--miss);
+      font-weight: 700;
     }
 
-    .small {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 900px) {
-      .guide,
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
+    @media (max-width: 940px) {
+      .lab,
+      .notes {
         grid-template-columns: 1fr;
       }
     }
@@ -254,113 +207,50 @@
   <main>
     <section class="hero">
       <a class="home-link" href="../index.html">Back to Home</a>
-      <h1>Probabilistic Methods - List 1 Visualizations</h1>
-      <p>
-        This file is meant for presentation during tutorials. It shows one discrete model
-        and one continuous Monte Carlo experiment, which matches the teacher's suggestion
-        to enrich the solution set with HTML simulations and visual explanations.
+      <h1>List 01 - Buffon's Needle Lab</h1>
+      <p class="muted">
+        One animated task from List 01. Use it to explain continuous sample spaces, the event
+        of intersection, and why Monte Carlo frequencies approach the theoretical probability.
       </p>
     </section>
 
-    <section class="guide">
-      <article class="guide-card">
-        <h2>What To Understand</h2>
-        <ul class="small">
-          <li>sequence outcome</li>
-          <li>continuous outcome</li>
-          <li>simulation vs exact formula</li>
-        </ul>
-      </article>
-
-      <article class="guide-card">
-        <h2>What To Visualize</h2>
-        <ul class="small">
-          <li>growth of sample space</li>
-          <li>Monte Carlo convergence</li>
-          <li>geometry behind probability</li>
-        </ul>
-      </article>
-
-      <article class="guide-card">
-        <h2>What To Say</h2>
-        <ul class="small">
-          <li>"One outcome is ..."</li>
-          <li>"Another step multiplies cases"</li>
-          <li>"More trials -> empirical closer to theory"</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="grid">
+    <section class="lab">
       <article class="panel">
-        <h2>Coin Toss Sample Space Explorer</h2>
-        <p>
-          Choose the number of tosses and generate the full sample space. This helps explain
-          what an elementary outcome means and why the number of outcomes is <code>2^n</code>.
-        </p>
-
-        <div class="controls">
-          <div class="control">
-            <label for="coin-count">Number of tosses</label>
-            <select id="coin-count">
-              <option value="1">1 toss</option>
-              <option value="2">2 tosses</option>
-              <option value="3" selected>3 tosses</option>
-            </select>
-          </div>
-          <button id="coin-generate">Generate Sample Space</button>
-        </div>
-
-        <div class="stats">
-          <div class="stat">
-            Number of tosses
-            <strong id="coin-n">3</strong>
-          </div>
-          <div class="stat">
-            Number of elementary outcomes
-            <strong id="coin-total">8</strong>
-          </div>
-        </div>
-
-        <div class="formula">For n tosses: |Omega_n| = 2^n</div>
-
-        <div id="coin-outcomes" class="badge-row"></div>
+        <h2>Animation</h2>
+        <canvas id="needle-canvas" width="860" height="430"></canvas>
       </article>
 
       <article class="panel">
-        <h2>Buffon's Needle Monte Carlo Simulation</h2>
-        <p>
-          This simulation illustrates the continuous sample space and compares the empirical
-          crossing frequency with the theoretical probability
-          <code>P(intersection) = 2L / (pi d)</code> for <code>L &lt;= d</code>.
-        </p>
+        <h2>Controls</h2>
 
         <div class="controls">
           <div class="control">
-            <label for="length-slider">Needle length ratio L/d</label>
-            <input id="length-slider" type="range" min="0.10" max="1.00" step="0.01" value="0.70">
+            <label for="ratio-slider">Needle ratio L/d</label>
+            <input id="ratio-slider" type="range" min="0.10" max="1.00" step="0.01" value="0.65">
           </div>
-          <div class="control">
-            <label for="run-size">Batch size</label>
-            <select id="run-size">
-              <option value="100">100 throws</option>
-              <option value="500" selected>500 throws</option>
-              <option value="2000">2000 throws</option>
-              <option value="10000">10000 throws</option>
-            </select>
-          </div>
-          <button id="run-button">Run Simulation</button>
-          <button id="reset-button" class="secondary">Reset</button>
+          <button id="throw-once">Single Throw</button>
+          <button id="toggle-run">Auto Run</button>
+          <button id="reset" class="secondary">Reset</button>
         </div>
+
+        <div class="formula" id="rule-box">Intersection rule: x <= (L/2) sin(theta)</div>
 
         <div class="stats">
           <div class="stat">
             Current L/d
-            <strong id="ratio-label">0.70</strong>
+            <strong id="ratio-label">0.65</strong>
           </div>
           <div class="stat">
-            Theoretical probability
-            <strong id="theoretical-label">0.4456</strong>
+            Theoretical P(intersection)
+            <strong id="theoretical-label">0.4138</strong>
+          </div>
+          <div class="stat">
+            Last throw
+            <strong id="last-result">-</strong>
+          </div>
+          <div class="stat">
+            Last x/d and angle
+            <strong id="last-params">-</strong>
           </div>
           <div class="stat">
             Total throws
@@ -371,116 +261,134 @@
             <strong id="empirical-label">0.0000</strong>
           </div>
         </div>
+      </article>
+    </section>
 
-        <canvas id="needle-canvas" width="920" height="340"></canvas>
+    <section class="notes">
+      <article class="note-card">
+        <h2>What One Outcome Is</h2>
+        <div class="formula">(x, theta)</div>
+        <ul>
+          <li><code>x</code>: distance from the center to the nearest line</li>
+          <li><code>theta</code>: angle between the needle and the lines</li>
+          <li>This is continuous, not a finite list of cases</li>
+        </ul>
+      </article>
 
-        <div class="legend">
-          <span class="hit">crosses a line</span>
-          <span class="miss">does not cross</span>
-        </div>
+      <article class="note-card">
+        <h2>What The Animation Shows</h2>
+        <ul>
+          <li>Red needle: intersects a line</li>
+          <li>Green needle: misses the lines</li>
+          <li>As throws increase, empirical probability gets closer to theory</li>
+        </ul>
+      </article>
 
-        <p class="small">
-          The picture keeps only the most recent throws, while the statistics use all throws since the last reset.
-        </p>
+      <article class="note-card">
+        <h2>What To Say In Class</h2>
+        <ul>
+          <li>"One outcome is the pair (x, theta)."</li>
+          <li>"The event is x <= (L/2) sin(theta)."</li>
+          <li>"The simulation illustrates the exact formula 2L / (pi d)."</li>
+        </ul>
       </article>
     </section>
   </main>
 
   <script>
-    const coinCount = document.getElementById("coin-count");
-    const coinGenerate = document.getElementById("coin-generate");
-    const coinN = document.getElementById("coin-n");
-    const coinTotal = document.getElementById("coin-total");
-    const coinOutcomes = document.getElementById("coin-outcomes");
-
-    function buildCoinOutcomes(n) {
-      const results = [];
-
-      function walk(prefix, depth) {
-        if (depth === n) {
-          results.push(n === 1 ? prefix[0] : `(${prefix.join(",")})`);
-          return;
-        }
-        walk(prefix.concat("H"), depth + 1);
-        walk(prefix.concat("T"), depth + 1);
-      }
-
-      walk([], 0);
-      return results;
-    }
-
-    function renderCoinOutcomes() {
-      const n = Number(coinCount.value);
-      const outcomes = buildCoinOutcomes(n);
-      coinN.textContent = String(n);
-      coinTotal.textContent = String(outcomes.length);
-      coinOutcomes.innerHTML = "";
-
-      outcomes.forEach((outcome) => {
-        const badge = document.createElement("div");
-        badge.className = "badge";
-        badge.textContent = outcome;
-        coinOutcomes.appendChild(badge);
-      });
-    }
-
-    coinGenerate.addEventListener("click", renderCoinOutcomes);
-    renderCoinOutcomes();
-
-    const lengthSlider = document.getElementById("length-slider");
-    const runSize = document.getElementById("run-size");
-    const runButton = document.getElementById("run-button");
-    const resetButton = document.getElementById("reset-button");
-    const ratioLabel = document.getElementById("ratio-label");
-    const theoreticalLabel = document.getElementById("theoretical-label");
-    const throwsLabel = document.getElementById("throws-label");
-    const empiricalLabel = document.getElementById("empirical-label");
     const canvas = document.getElementById("needle-canvas");
     const ctx = canvas.getContext("2d");
+    const ratioSlider = document.getElementById("ratio-slider");
+    const throwOnceButton = document.getElementById("throw-once");
+    const toggleRunButton = document.getElementById("toggle-run");
+    const resetButton = document.getElementById("reset");
+    const ratioLabel = document.getElementById("ratio-label");
+    const theoreticalLabel = document.getElementById("theoretical-label");
+    const lastResult = document.getElementById("last-result");
+    const lastParams = document.getElementById("last-params");
+    const throwsLabel = document.getElementById("throws-label");
+    const empiricalLabel = document.getElementById("empirical-label");
 
-    const spacing = 80;
-    const maxHistory = 180;
+    const spacing = 84;
+    const historyLimit = 90;
     let totalThrows = 0;
     let totalHits = 0;
     let history = [];
+    let runTimer = null;
+
+    function ratioValue() {
+      return Number(ratioSlider.value);
+    }
 
     function theoreticalProbability(ratio) {
       return (2 * ratio) / Math.PI;
     }
 
-    function updateNeedleLabels() {
-      const ratio = Number(lengthSlider.value);
-      ratioLabel.textContent = ratio.toFixed(2);
-      theoreticalLabel.textContent = theoreticalProbability(ratio).toFixed(4);
-      throwsLabel.textContent = String(totalThrows);
-      empiricalLabel.textContent = totalThrows === 0 ? "0.0000" : (totalHits / totalThrows).toFixed(4);
+    function normalizedTheta(angle) {
+      let theta = angle % Math.PI;
+      if (theta < 0) {
+        theta += Math.PI;
+      }
+      if (theta > Math.PI / 2) {
+        theta = Math.PI - theta;
+      }
+      return theta;
     }
 
-    function randomThrow() {
-      const ratio = Number(lengthSlider.value);
+    function sampleThrow() {
+      const ratio = ratioValue();
       const needleLength = ratio * spacing;
       const margin = needleLength / 2 + 8;
       const x = margin + Math.random() * (canvas.width - 2 * margin);
       const y = margin + Math.random() * (canvas.height - 2 * margin);
       const angle = Math.random() * Math.PI;
-
+      const theta = normalizedTheta(angle);
       const dx = (needleLength / 2) * Math.cos(angle);
       const dy = (needleLength / 2) * Math.sin(angle);
       const y1 = y - dy;
       const y2 = y + dy;
+      const nearestLine = Math.round(y / spacing) * spacing;
+      const xDistance = Math.abs(y - nearestLine);
       const hit = Math.floor(y1 / spacing) !== Math.floor(y2 / spacing);
 
-      return { x1: x - dx, y1, x2: x + dx, y2, hit };
+      return {
+        x1: x - dx,
+        y1,
+        x2: x + dx,
+        y2,
+        hit,
+        xDistance,
+        theta
+      };
     }
 
-    function drawNeedles() {
+    function updateLabels(last) {
+      const ratio = ratioValue();
+      ratioLabel.textContent = ratio.toFixed(2);
+      theoreticalLabel.textContent = theoreticalProbability(ratio).toFixed(4);
+      throwsLabel.textContent = String(totalThrows);
+      empiricalLabel.textContent = totalThrows === 0 ? "0.0000" : (totalHits / totalThrows).toFixed(4);
+
+      if (!last) {
+        lastResult.textContent = "-";
+        lastParams.textContent = "-";
+        lastResult.className = "";
+        return;
+      }
+
+      lastResult.textContent = last.hit ? "Intersects" : "No intersection";
+      lastResult.className = last.hit ? "result-hit" : "result-miss";
+      lastParams.textContent = `${(last.xDistance / spacing).toFixed(3)}, ${(last.theta * 180 / Math.PI).toFixed(1)}deg`;
+    }
+
+    function drawScene() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#fffdfa";
+      ctx.fillStyle = "#fffdf9";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let y = 0; y <= canvas.height; y += spacing) {
-        ctx.strokeStyle = "rgba(91, 100, 112, 0.28)";
+        ctx.strokeStyle = "rgba(93, 102, 114, 0.28)";
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -488,9 +396,12 @@
         ctx.stroke();
       }
 
-      history.forEach((needle) => {
-        ctx.strokeStyle = needle.hit ? "rgba(185, 28, 28, 0.72)" : "rgba(21, 128, 61, 0.65)";
-        ctx.lineWidth = 2.2;
+      history.forEach((needle, index) => {
+        const alpha = (index + 1) / history.length;
+        ctx.strokeStyle = needle.hit
+          ? `rgba(185, 28, 28, ${0.15 + alpha * 0.75})`
+          : `rgba(21, 128, 61, ${0.15 + alpha * 0.75})`;
+        ctx.lineWidth = index === history.length - 1 ? 3.2 : 2;
         ctx.beginPath();
         ctx.moveTo(needle.x1, needle.y1);
         ctx.lineTo(needle.x2, needle.y2);
@@ -498,41 +409,47 @@
       });
     }
 
-    function runSimulation() {
-      const batch = Number(runSize.value);
-
-      for (let i = 0; i < batch; i += 1) {
-        const needle = randomThrow();
-        totalThrows += 1;
-        if (needle.hit) {
-          totalHits += 1;
-        }
-        history.push(needle);
+    function applyThrow() {
+      const needle = sampleThrow();
+      totalThrows += 1;
+      if (needle.hit) {
+        totalHits += 1;
       }
-
-      if (history.length > maxHistory) {
-        history = history.slice(history.length - maxHistory);
+      history.push(needle);
+      if (history.length > historyLimit) {
+        history = history.slice(history.length - historyLimit);
       }
-
-      updateNeedleLabels();
-      drawNeedles();
+      updateLabels(needle);
+      drawScene();
     }
 
-    function resetSimulation() {
+    function resetAll() {
       totalThrows = 0;
       totalHits = 0;
       history = [];
-      updateNeedleLabels();
-      drawNeedles();
+      updateLabels(null);
+      drawScene();
     }
 
-    lengthSlider.addEventListener("input", resetSimulation);
+    function toggleRun() {
+      if (runTimer) {
+        clearInterval(runTimer);
+        runTimer = null;
+        toggleRunButton.textContent = "Auto Run";
+        return;
+      }
+      runTimer = setInterval(applyThrow, 120);
+      toggleRunButton.textContent = "Pause";
+    }
 
-    runButton.addEventListener("click", runSimulation);
-    resetButton.addEventListener("click", resetSimulation);
+    ratioSlider.addEventListener("input", () => {
+      resetAll();
+    });
+    throwOnceButton.addEventListener("click", applyThrow);
+    toggleRunButton.addEventListener("click", toggleRun);
+    resetButton.addEventListener("click", resetAll);
 
-    updateNeedleLabels();
-    drawNeedles();
+    resetAll();
   </script>
 </body>
 </html>
