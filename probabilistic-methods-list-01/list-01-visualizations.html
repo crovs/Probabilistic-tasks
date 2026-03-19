@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probabilistic Methods - List 1 Visualizations</title>
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --panel: #fffaf2;
+      --ink: #1f2933;
+      --muted: #5b6470;
+      --accent: #0f766e;
+      --accent-2: #c2410c;
+      --line: #d5c7ad;
+      --ok: #15803d;
+      --bad: #b91c1c;
+      --shadow: 0 18px 40px rgba(36, 33, 28, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(194, 65, 12, 0.10), transparent 24%),
+        linear-gradient(180deg, #f8f4ec 0%, var(--bg) 100%);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.55;
+    }
+
+    .hero {
+      padding: 28px;
+      border: 1px solid rgba(31, 41, 51, 0.08);
+      border-radius: 24px;
+      background: rgba(255, 250, 242, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero p {
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin: 16px 0 18px;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 150px;
+    }
+
+    label {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), #155e75);
+      transition: transform 160ms ease, filter 160ms ease;
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, var(--accent-2), #9a3412);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: saturate(1.06);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f3ead8;
+      border: 1px solid var(--line);
+      font-family: "Courier New", monospace;
+      font-size: 0.92rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 18px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fffdf8;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-top: 6px;
+    }
+
+    .formula {
+      padding: 14px 16px;
+      background: #f7f2e9;
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      margin-bottom: 16px;
+      font-family: "Courier New", monospace;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fffdfa 0%, #f9f2e3 100%);
+      display: block;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      border-radius: 999px;
+      vertical-align: middle;
+    }
+
+    .legend .hit::before {
+      background: var(--bad);
+    }
+
+    .legend .miss::before {
+      background: var(--ok);
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <h1>Probabilistic Methods - List 1 Visualizations</h1>
+      <p>
+        This file is meant for presentation during tutorials. It shows one discrete model
+        and one continuous Monte Carlo experiment, which matches the teacher's suggestion
+        to enrich the solution set with HTML simulations and visual explanations.
+      </p>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Coin Toss Sample Space Explorer</h2>
+        <p>
+          Choose the number of tosses and generate the full sample space. This helps explain
+          what an elementary outcome means and why the number of outcomes is <code>2^n</code>.
+        </p>
+
+        <div class="controls">
+          <div class="control">
+            <label for="coin-count">Number of tosses</label>
+            <select id="coin-count">
+              <option value="1">1 toss</option>
+              <option value="2">2 tosses</option>
+              <option value="3" selected>3 tosses</option>
+            </select>
+          </div>
+          <button id="coin-generate">Generate Sample Space</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            Number of tosses
+            <strong id="coin-n">3</strong>
+          </div>
+          <div class="stat">
+            Number of elementary outcomes
+            <strong id="coin-total">8</strong>
+          </div>
+        </div>
+
+        <div class="formula">For n tosses: |Omega_n| = 2^n</div>
+
+        <div id="coin-outcomes" class="badge-row"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Buffon's Needle Monte Carlo Simulation</h2>
+        <p>
+          This simulation illustrates the continuous sample space and compares the empirical
+          crossing frequency with the theoretical probability
+          <code>P(intersection) = 2L / (pi d)</code> for <code>L &lt;= d</code>.
+        </p>
+
+        <div class="controls">
+          <div class="control">
+            <label for="length-slider">Needle length ratio L/d</label>
+            <input id="length-slider" type="range" min="0.10" max="1.00" step="0.01" value="0.70">
+          </div>
+          <div class="control">
+            <label for="run-size">Batch size</label>
+            <select id="run-size">
+              <option value="100">100 throws</option>
+              <option value="500" selected>500 throws</option>
+              <option value="2000">2000 throws</option>
+              <option value="10000">10000 throws</option>
+            </select>
+          </div>
+          <button id="run-button">Run Simulation</button>
+          <button id="reset-button" class="secondary">Reset</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            Current L/d
+            <strong id="ratio-label">0.70</strong>
+          </div>
+          <div class="stat">
+            Theoretical probability
+            <strong id="theoretical-label">0.4456</strong>
+          </div>
+          <div class="stat">
+            Total throws
+            <strong id="throws-label">0</strong>
+          </div>
+          <div class="stat">
+            Empirical probability
+            <strong id="empirical-label">0.0000</strong>
+          </div>
+        </div>
+
+        <canvas id="needle-canvas" width="920" height="340"></canvas>
+
+        <div class="legend">
+          <span class="hit">crosses a line</span>
+          <span class="miss">does not cross</span>
+        </div>
+
+        <p class="small">
+          The picture keeps only the most recent throws, while the statistics use all throws since the last reset.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const coinCount = document.getElementById("coin-count");
+    const coinGenerate = document.getElementById("coin-generate");
+    const coinN = document.getElementById("coin-n");
+    const coinTotal = document.getElementById("coin-total");
+    const coinOutcomes = document.getElementById("coin-outcomes");
+
+    function buildCoinOutcomes(n) {
+      const results = [];
+
+      function walk(prefix, depth) {
+        if (depth === n) {
+          results.push(n === 1 ? prefix[0] : `(${prefix.join(",")})`);
+          return;
+        }
+        walk(prefix.concat("H"), depth + 1);
+        walk(prefix.concat("T"), depth + 1);
+      }
+
+      walk([], 0);
+      return results;
+    }
+
+    function renderCoinOutcomes() {
+      const n = Number(coinCount.value);
+      const outcomes = buildCoinOutcomes(n);
+      coinN.textContent = String(n);
+      coinTotal.textContent = String(outcomes.length);
+      coinOutcomes.innerHTML = "";
+
+      outcomes.forEach((outcome) => {
+        const badge = document.createElement("div");
+        badge.className = "badge";
+        badge.textContent = outcome;
+        coinOutcomes.appendChild(badge);
+      });
+    }
+
+    coinGenerate.addEventListener("click", renderCoinOutcomes);
+    renderCoinOutcomes();
+
+    const lengthSlider = document.getElementById("length-slider");
+    const runSize = document.getElementById("run-size");
+    const runButton = document.getElementById("run-button");
+    const resetButton = document.getElementById("reset-button");
+    const ratioLabel = document.getElementById("ratio-label");
+    const theoreticalLabel = document.getElementById("theoretical-label");
+    const throwsLabel = document.getElementById("throws-label");
+    const empiricalLabel = document.getElementById("empirical-label");
+    const canvas = document.getElementById("needle-canvas");
+    const ctx = canvas.getContext("2d");
+
+    const spacing = 80;
+    const maxHistory = 180;
+    let totalThrows = 0;
+    let totalHits = 0;
+    let history = [];
+
+    function theoreticalProbability(ratio) {
+      return (2 * ratio) / Math.PI;
+    }
+
+    function updateNeedleLabels() {
+      const ratio = Number(lengthSlider.value);
+      ratioLabel.textContent = ratio.toFixed(2);
+      theoreticalLabel.textContent = theoreticalProbability(ratio).toFixed(4);
+      throwsLabel.textContent = String(totalThrows);
+      empiricalLabel.textContent = totalThrows === 0 ? "0.0000" : (totalHits / totalThrows).toFixed(4);
+    }
+
+    function randomThrow() {
+      const ratio = Number(lengthSlider.value);
+      const needleLength = ratio * spacing;
+      const margin = needleLength / 2 + 8;
+      const x = margin + Math.random() * (canvas.width - 2 * margin);
+      const y = margin + Math.random() * (canvas.height - 2 * margin);
+      const angle = Math.random() * Math.PI;
+
+      const dx = (needleLength / 2) * Math.cos(angle);
+      const dy = (needleLength / 2) * Math.sin(angle);
+      const y1 = y - dy;
+      const y2 = y + dy;
+      const hit = Math.floor(y1 / spacing) !== Math.floor(y2 / spacing);
+
+      return { x1: x - dx, y1, x2: x + dx, y2, hit };
+    }
+
+    function drawNeedles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#fffdfa";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let y = 0; y <= canvas.height; y += spacing) {
+        ctx.strokeStyle = "rgba(91, 100, 112, 0.28)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      history.forEach((needle) => {
+        ctx.strokeStyle = needle.hit ? "rgba(185, 28, 28, 0.72)" : "rgba(21, 128, 61, 0.65)";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(needle.x1, needle.y1);
+        ctx.lineTo(needle.x2, needle.y2);
+        ctx.stroke();
+      });
+    }
+
+    function runSimulation() {
+      const batch = Number(runSize.value);
+
+      for (let i = 0; i < batch; i += 1) {
+        const needle = randomThrow();
+        totalThrows += 1;
+        if (needle.hit) {
+          totalHits += 1;
+        }
+        history.push(needle);
+      }
+
+      if (history.length > maxHistory) {
+        history = history.slice(history.length - maxHistory);
+      }
+
+      updateNeedleLabels();
+      drawNeedles();
+    }
+
+    function resetSimulation() {
+      totalThrows = 0;
+      totalHits = 0;
+      history = [];
+      updateNeedleLabels();
+      drawNeedles();
+    }
+
+    lengthSlider.addEventListener("input", resetSimulation);
+
+    runButton.addEventListener("click", runSimulation);
+    resetButton.addEventListener("click", resetSimulation);
+
+    updateNeedleLabels();
+    drawNeedles();
+  </script>
+</body>
+</html>
