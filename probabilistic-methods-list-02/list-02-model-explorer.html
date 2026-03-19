@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probabilistic Methods - List 02 Model Explorer</title>
+  <style>
+    :root {
+      --bg: #f3efe8;
+      --panel: rgba(255, 251, 245, 0.9);
+      --ink: #1c2430;
+      --muted: #586171;
+      --accent: #0f766e;
+      --accent-2: #b45309;
+      --line: #d5c9b4;
+      --shadow: 0 18px 42px rgba(26, 28, 32, 0.10);
+      --good: #166534;
+      --warn: #92400e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(15, 118, 110, 0.10), transparent 26%),
+        radial-gradient(circle at 100% 0%, rgba(180, 83, 9, 0.10), transparent 24%),
+        linear-gradient(180deg, #faf7f1 0%, var(--bg) 100%);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.55;
+    }
+
+    .hero,
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(28, 36, 48, 0.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      padding: 28px;
+    }
+
+    .hero p {
+      max-width: 880px;
+      color: var(--muted);
+      font-size: 1.04rem;
+    }
+
+    .grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .panel {
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    label {
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fffdf9;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .result {
+      padding: 16px;
+      border-radius: 18px;
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      margin-top: 10px;
+    }
+
+    .result strong {
+      display: block;
+      font-size: 1.28rem;
+      margin-bottom: 8px;
+    }
+
+    .formula {
+      font-family: "Courier New", monospace;
+      background: #f6f0e3;
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      margin: 12px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #efe7d7;
+      border: 1px solid var(--line);
+      margin: 4px 6px 0 0;
+      font-size: 0.92rem;
+    }
+
+    .ok {
+      color: var(--good);
+      font-weight: 700;
+    }
+
+    .warn {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    @media (max-width: 920px) {
+      .grid,
+      .control-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <h1>Probabilistic Methods - List 02 Model Explorer</h1>
+      <p>
+        This page is designed for tutorial presentation. It helps explain how to choose the
+        correct counting model and how to evaluate the main combinatorial formulas used in
+        probability problems.
+      </p>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Decision Assistant</h2>
+        <p>
+          Answer the same questions that appear in the lecture notes: are we using all
+          objects, does order matter, is repetition allowed, are some objects identical, and
+          is the arrangement circular?
+        </p>
+
+        <div class="control-grid">
+          <div class="control">
+            <label for="use-all">Are we using all objects?</label>
+            <select id="use-all">
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label for="is-circle">Are objects arranged in a circle?</label>
+            <select id="is-circle">
+              <option value="no" selected>No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label for="order-matters">Does order matter?</label>
+            <select id="order-matters">
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label for="repetition-allowed">Is repetition allowed?</label>
+            <select id="repetition-allowed">
+              <option value="no" selected>No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label for="identical-objects">Are some objects identical?</label>
+            <select id="identical-objects">
+              <option value="no" selected>No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="result">
+          <strong id="model-name">Permutation</strong>
+          <div id="model-formula" class="formula">n!</div>
+          <p id="model-explanation" class="note"></p>
+          <div id="model-tags"></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Formula Calculator</h2>
+        <p>
+          Choose a counting model and enter the parameters. For permutations with repeated
+          elements, type the multiplicities separated by commas, for example <code>3,3,2</code>.
+        </p>
+
+        <div class="control-grid">
+          <div class="control">
+            <label for="calc-model">Model</label>
+            <select id="calc-model">
+              <option value="permutation">Permutation</option>
+              <option value="circular">Circular permutation</option>
+              <option value="combination">Combination</option>
+              <option value="kpermutation">k-permutation</option>
+              <option value="sequence">Sequence with repetition</option>
+              <option value="repeated">Permutation with repeated elements</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label for="calc-n">n</label>
+            <input id="calc-n" type="number" min="0" value="7">
+          </div>
+
+          <div class="control">
+            <label for="calc-k">k</label>
+            <input id="calc-k" type="number" min="0" value="3">
+          </div>
+
+          <div class="control">
+            <label for="calc-repeats">Repeated multiplicities</label>
+            <input id="calc-repeats" type="text" value="3,3,2">
+          </div>
+        </div>
+
+        <div class="result">
+          <strong id="calc-title">Permutation</strong>
+          <div id="calc-formula" class="formula">7! = 5040</div>
+          <p id="calc-note" class="note"></p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const useAll = document.getElementById("use-all");
+    const isCircle = document.getElementById("is-circle");
+    const orderMatters = document.getElementById("order-matters");
+    const repetitionAllowed = document.getElementById("repetition-allowed");
+    const identicalObjects = document.getElementById("identical-objects");
+
+    const modelName = document.getElementById("model-name");
+    const modelFormula = document.getElementById("model-formula");
+    const modelExplanation = document.getElementById("model-explanation");
+    const modelTags = document.getElementById("model-tags");
+
+    const calcModel = document.getElementById("calc-model");
+    const calcN = document.getElementById("calc-n");
+    const calcK = document.getElementById("calc-k");
+    const calcRepeats = document.getElementById("calc-repeats");
+    const calcTitle = document.getElementById("calc-title");
+    const calcFormula = document.getElementById("calc-formula");
+    const calcNote = document.getElementById("calc-note");
+
+    function factorialBigInt(n) {
+      if (n < 0) {
+        return null;
+      }
+      let result = 1n;
+      for (let i = 2n; i <= BigInt(n); i += 1n) {
+        result *= i;
+      }
+      return result;
+    }
+
+    function combinationBigInt(n, k) {
+      if (k < 0 || k > n) {
+        return null;
+      }
+      const kk = Math.min(k, n - k);
+      let result = 1n;
+      for (let i = 1; i <= kk; i += 1) {
+        result = (result * BigInt(n - kk + i)) / BigInt(i);
+      }
+      return result;
+    }
+
+    function permutationBigInt(n, k) {
+      if (k < 0 || k > n) {
+        return null;
+      }
+      let result = 1n;
+      for (let i = 0; i < k; i += 1) {
+        result *= BigInt(n - i);
+      }
+      return result;
+    }
+
+    function powerBigInt(base, exp) {
+      if (exp < 0) {
+        return null;
+      }
+      let result = 1n;
+      for (let i = 0; i < exp; i += 1) {
+        result *= BigInt(base);
+      }
+      return result;
+    }
+
+    function formatBigInt(value) {
+      return value === null ? "undefined" : value.toString();
+    }
+
+    function setTags(items) {
+      modelTags.innerHTML = "";
+      items.forEach((item) => {
+        const span = document.createElement("span");
+        span.className = "badge";
+        span.textContent = item;
+        modelTags.appendChild(span);
+      });
+    }
+
+    function updateDecisionAssistant() {
+      const all = useAll.value === "yes";
+      const circle = isCircle.value === "yes";
+      const order = orderMatters.value === "yes";
+      const repetition = repetitionAllowed.value === "yes";
+      const identical = identicalObjects.value === "yes";
+
+      let name = "";
+      let formula = "";
+      let explanation = "";
+      let tags = [];
+
+      if (all) {
+        if (circle) {
+          if (identical) {
+            name = "Circular arrangement with identical objects";
+            formula = "No single standard formula in this simple decision tree";
+            explanation = "The course decision tree points first to circular permutations, but once identical objects appear the counting becomes more specialized and usually needs separate case analysis.";
+            tags = ["all objects", "circle", "rotations equivalent", "special case"];
+          } else {
+            name = "Circular permutation";
+            formula = "(n - 1)!";
+            explanation = "All objects are used, they are distinct, and arrangements differing only by rotation are treated as the same.";
+            tags = ["all objects", "circle", "distinct objects"];
+          }
+        } else if (identical) {
+          name = "Permutation with repeated elements";
+          formula = "n! / (n1! n2! ... nr!)";
+          explanation = "All objects are arranged, but some of them are indistinguishable, so we divide by the factorials of repeated multiplicities.";
+          tags = ["all objects", "linear", "identical objects"];
+        } else {
+          name = "Permutation";
+          formula = "n!";
+          explanation = "All objects are arranged in order, with no repetition and no circular symmetry.";
+          tags = ["all objects", "linear", "distinct objects"];
+        }
+      } else if (!order) {
+        name = "Combination";
+        formula = "C(n, k) = n! / (k! (n-k)!)";
+        explanation = "Only some objects are chosen and order does not matter.";
+        tags = ["some objects", "unordered", "no repetition"];
+      } else if (repetition) {
+        name = "Sequence with repetition";
+        formula = "n^k";
+        explanation = "Each of the k positions can be filled independently from the same set of n symbols.";
+        tags = ["some objects", "ordered", "repetition allowed"];
+      } else {
+        name = "k-permutation";
+        formula = "P(n, k) = n! / (n-k)!";
+        explanation = "Only some objects are used, order matters, and repetition is not allowed.";
+        tags = ["some objects", "ordered", "no repetition"];
+      }
+
+      if (!all && circle) {
+        explanation += " The circle answer is ignored here because circular permutations are normally used when all objects are arranged around the circle.";
+      }
+
+      if (!all && identical) {
+        explanation += " If selected objects themselves are identical, the problem may require a more specialized model than the basic tree.";
+      }
+
+      modelName.textContent = name;
+      modelFormula.textContent = formula;
+      modelExplanation.textContent = explanation;
+      setTags(tags);
+    }
+
+    function parseIntSafe(value) {
+      const parsed = Number(value);
+      return Number.isInteger(parsed) ? parsed : NaN;
+    }
+
+    function updateCalculator() {
+      const model = calcModel.value;
+      const n = parseIntSafe(calcN.value);
+      const k = parseIntSafe(calcK.value);
+      const repeatsText = calcRepeats.value.trim();
+
+      let title = "";
+      let formula = "";
+      let note = "";
+
+      if (!Number.isInteger(n) || n < 0) {
+        calcTitle.textContent = "Invalid input";
+        calcFormula.textContent = "n must be a non-negative integer";
+        calcNote.textContent = "";
+        return;
+      }
+
+      if ((model === "combination" || model === "kpermutation" || model === "sequence") && (!Number.isInteger(k) || k < 0)) {
+        calcTitle.textContent = "Invalid input";
+        calcFormula.textContent = "k must be a non-negative integer";
+        calcNote.textContent = "";
+        return;
+      }
+
+      if (model === "permutation") {
+        title = "Permutation";
+        const value = factorialBigInt(n);
+        formula = `${n}! = ${formatBigInt(value)}`;
+        note = "All n distinct objects are arranged.";
+      } else if (model === "circular") {
+        title = "Circular permutation";
+        if (n === 0) {
+          formula = "Not used for n = 0";
+          note = "Circular permutations are intended for at least one object.";
+        } else {
+          const value = factorialBigInt(n - 1);
+          formula = `(${n} - 1)! = ${formatBigInt(value)}`;
+          note = "Rotations are treated as the same arrangement.";
+        }
+      } else if (model === "combination") {
+        title = "Combination";
+        const value = combinationBigInt(n, k);
+        formula = value === null
+          ? `C(${n}, ${k}) is undefined for k > n`
+          : `C(${n}, ${k}) = ${formatBigInt(value)}`;
+        note = "Choose k objects from n when order does not matter.";
+      } else if (model === "kpermutation") {
+        title = "k-permutation";
+        const value = permutationBigInt(n, k);
+        formula = value === null
+          ? `P(${n}, ${k}) is undefined for k > n`
+          : `P(${n}, ${k}) = ${formatBigInt(value)}`;
+        note = "Ordered selection of k objects from n without repetition.";
+      } else if (model === "sequence") {
+        title = "Sequence with repetition";
+        const value = powerBigInt(n, k);
+        formula = `${n}^${k} = ${formatBigInt(value)}`;
+        note = "Each of the k positions has n independent choices.";
+      } else {
+        title = "Permutation with repeated elements";
+        const parts = repeatsText === ""
+          ? []
+          : repeatsText.split(",").map((piece) => Number(piece.trim())).filter((piece) => Number.isInteger(piece) && piece >= 0);
+        const sum = parts.reduce((acc, value) => acc + value, 0);
+
+        if (parts.length === 0) {
+          formula = "Enter multiplicities such as 3,3,2";
+          note = "The multiplicities should add up to n.";
+        } else if (sum !== n) {
+          formula = `The multiplicities sum to ${sum}, but n = ${n}`;
+          note = "For n! / (n1! n2! ...), the multiplicities must add up to n.";
+        } else {
+          let denominator = 1n;
+          parts.forEach((part) => {
+            denominator *= factorialBigInt(part);
+          });
+          const numerator = factorialBigInt(n);
+          const value = numerator / denominator;
+          formula = `${n}! / (${parts.map((part) => `${part}!`).join(" ")}) = ${formatBigInt(value)}`;
+          note = "Use this when equal objects are indistinguishable.";
+        }
+      }
+
+      calcTitle.textContent = title;
+      calcFormula.textContent = formula;
+      calcNote.textContent = note;
+    }
+
+    [useAll, isCircle, orderMatters, repetitionAllowed, identicalObjects].forEach((element) => {
+      element.addEventListener("change", updateDecisionAssistant);
+    });
+
+    [calcModel, calcN, calcK, calcRepeats].forEach((element) => {
+      element.addEventListener("input", updateCalculator);
+      element.addEventListener("change", updateCalculator);
+    });
+
+    updateDecisionAssistant();
+    updateCalculator();
+  </script>
+</body>
+</html>
