@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>List 02 - Urn Recording Lab</title>
+  <title>List 02 - Task 10 Urn Models Lab</title>
   <style>
     :root {
       --bg: #f5efe6;
-      --panel: rgba(255, 251, 245, 0.92);
+      --panel: rgba(255, 251, 245, 0.94);
       --ink: #1f2933;
       --muted: #5d6672;
       --accent: #0f766e;
@@ -34,14 +34,15 @@
     }
 
     main {
-      max-width: 1180px;
+      max-width: 1220px;
       margin: 0 auto;
       padding: 32px 20px 48px;
     }
 
     .hero,
     .panel,
-    .card {
+    .card,
+    .task-card {
       background: var(--panel);
       border: 1px solid rgba(31, 41, 51, 0.10);
       border-radius: 24px;
@@ -81,7 +82,7 @@
 
     .lab {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.08fr 0.92fr;
       gap: 22px;
       margin-top: 24px;
     }
@@ -96,30 +97,6 @@
       flex-wrap: wrap;
       gap: 12px;
       margin: 16px 0 18px;
-      align-items: end;
-    }
-
-    .control {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 170px;
-      flex: 1 1 170px;
-    }
-
-    label {
-      font-size: 0.94rem;
-      color: var(--muted);
-    }
-
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #fffdf9;
-      color: var(--ink);
-      font: inherit;
     }
 
     button {
@@ -143,7 +120,7 @@
       background: linear-gradient(180deg, #fffdf9 0%, #f6efe2 100%);
       padding: 18px;
       display: grid;
-      grid-template-columns: 1fr 0.75fr;
+      grid-template-columns: 1fr 0.78fr;
       gap: 18px;
     }
 
@@ -171,29 +148,37 @@
     }
 
     .ball,
-    .draw-slot {
-      height: 54px;
+    .draw-slot,
+    .chip {
       border-radius: 999px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       color: #fff;
+    }
+
+    .ball,
+    .draw-slot {
+      height: 54px;
       transition: transform 220ms ease, opacity 220ms ease, box-shadow 220ms ease;
     }
 
     .ball.red,
-    .draw-slot.red {
+    .draw-slot.red,
+    .chip.red {
       background: linear-gradient(135deg, #ef4444, var(--red));
     }
 
     .ball.blue,
-    .draw-slot.blue {
+    .draw-slot.blue,
+    .chip.blue {
       background: linear-gradient(135deg, #3b82f6, var(--blue));
     }
 
     .ball.green,
-    .draw-slot.green {
+    .draw-slot.green,
+    .chip.green {
       background: linear-gradient(135deg, #22c55e, var(--green));
     }
 
@@ -225,6 +210,12 @@
       padding: 18px;
     }
 
+    .card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.05rem;
+    }
+
     .formula {
       font-family: "Courier New", monospace;
       background: #f7f1e6;
@@ -233,34 +224,6 @@
       padding: 14px 16px;
       margin: 12px 0;
       overflow-wrap: anywhere;
-    }
-
-    .record-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 24px;
-    }
-
-    .record-card {
-      background: var(--panel);
-      border: 1px solid rgba(31, 41, 51, 0.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
-
-    .record-card.active {
-      outline: 2px solid var(--accent);
-      outline-offset: 0;
-    }
-
-    .record-intro {
-      margin-top: 24px;
-    }
-
-    .record-intro p {
-      margin-bottom: 0;
     }
 
     .sequence-box {
@@ -283,58 +246,84 @@
     .chip {
       min-width: 40px;
       padding: 7px 12px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
       font-size: 0.9rem;
-      font-weight: 700;
       letter-spacing: 0.02em;
-    }
-
-    .chip.red {
-      background: linear-gradient(135deg, #ef4444, var(--red));
-    }
-
-    .chip.blue {
-      background: linear-gradient(135deg, #3b82f6, var(--blue));
-    }
-
-    .chip.green {
-      background: linear-gradient(135deg, #22c55e, var(--green));
     }
 
     .chip-arrow {
       color: var(--accent-2);
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.98rem;
     }
 
-    .record-copy {
-      margin-top: 12px;
-    }
-
-    .detail-grid {
+    .task-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
+      gap: 16px;
+      margin-top: 18px;
     }
 
-    .panel-card {
-      background: #fffdf8;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
+    .task-card {
+      padding: 18px;
+      min-width: 0;
     }
 
-    .panel-card h3 {
-      margin-bottom: 8px;
+    .task-card h3 {
+      font-size: 1.02rem;
     }
 
-    .focus-breakdown {
-      margin-top: 16px;
+    .task-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .history-panel,
+    .notes {
+      margin-top: 24px;
+    }
+
+    .history-panel {
+      padding: 22px;
+    }
+
+    .history-wrap {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .yes {
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .no {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
     }
 
     ul {
@@ -343,59 +332,11 @@
       line-height: 1.55;
     }
 
-    .notes {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 24px;
-    }
-
-    .legend-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 24px;
-    }
-
-    .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      color: var(--muted);
-    }
-
-    .mini-ball {
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .mini-ball.red {
-      background: linear-gradient(135deg, #ef4444, var(--red));
-    }
-
-    .mini-ball.blue {
-      background: linear-gradient(135deg, #3b82f6, var(--blue));
-    }
-
-    .mini-ball.green {
-      background: linear-gradient(135deg, #22c55e, var(--green));
-    }
-
-    @media (max-width: 980px) {
+    @media (max-width: 1040px) {
       .lab,
-      .notes,
-      .legend-grid,
-      .record-grid,
+      .task-grid,
       .summary,
-      .detail-grid {
+      .notes {
         grid-template-columns: 1fr;
       }
 
@@ -409,193 +350,205 @@
   <main>
     <section class="hero">
       <a class="home-link" href="../index.html">Back to Home</a>
-      <h1>List 02 - Urn Recording Lab</h1>
+      <h1>List 02 - Task 10 Urn Models Lab</h1>
       <p class="muted">
-        One animated task for List 02. The physical draw is the same, but the number of outcomes
-        changes depending on what you record.
+        This page is built directly for Task 10. The animation shows one physical experiment:
+        draw 3 balls without replacement. The right side rewrites that same draw in the exact two
+        ways used in the task.
       </p>
     </section>
 
     <section class="lab">
       <article class="panel">
-        <h2>Animation</h2>
+        <h2>Physical Experiment</h2>
+        <p class="muted">Urn contents: 5 red, 4 blue, 3 green. Draw 3 balls without replacement.</p>
 
         <div class="controls">
-          <div class="control">
-            <label for="focus-mode">Highlight this recording rule</label>
-            <select id="focus-mode">
-              <option value="actual_unordered">Actual balls, order ignored</option>
-              <option value="colors_ordered">Colors only, order recorded</option>
-              <option value="colors_unordered">Colors only, order ignored</option>
-            </select>
-          </div>
           <button id="draw-one">Draw 1</button>
-          <button id="draw-three">Draw 3</button>
-          <button id="auto-demo">Auto Demo</button>
-          <button id="reset" class="secondary">Reset</button>
+          <button id="draw-three">Complete Draw</button>
+          <button id="new-draw">New Draw</button>
+          <button id="auto-demo">Auto Run</button>
+          <button id="clear-all" class="secondary">Clear All</button>
         </div>
 
         <div class="stage">
           <div class="urn-box">
             <h3>Urn</h3>
-            <p class="muted">5 red, 4 blue, 3 green balls</p>
+            <p class="muted">Each label is one specific ball.</p>
             <div id="urn-grid" class="ball-grid"></div>
           </div>
 
           <div class="draw-box">
             <h3>Drawn Balls</h3>
-            <p class="muted">Three draws without replacement</p>
+            <p class="muted">The slots show the real extraction order.</p>
             <div id="draw-grid" class="draw-grid"></div>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="card">
+            Current red count
+            <strong id="red-count">0</strong>
+          </div>
+          <div class="card">
+            Exactly two red?
+            <strong id="current-event">Need 3 draws</strong>
+          </div>
+          <div class="card">
+            Finished experiments
+            <strong id="run-count">0</strong>
+          </div>
+          <div class="card">
+            Experiments with exactly two red
+            <strong id="hit-count">0</strong>
+          </div>
+          <div class="card">
+            Empirical frequency
+            <strong id="empirical-frequency">0.0000</strong>
+          </div>
+          <div class="card">
+            Theoretical probability
+            <strong>70 / 220 = 7 / 22</strong>
           </div>
         </div>
       </article>
 
       <article class="panel">
-        <h2>Current Recording</h2>
-        <div class="formula" id="focus-formula">C(12,3) = 220</div>
-
-        <div class="summary">
-          <div class="card">
-            Focus mode
-            <strong id="focus-title">Actual balls, order ignored</strong>
-          </div>
-          <div class="card">
-            Current recorded outcome
-            <strong id="focus-outcome">-</strong>
-          </div>
-          <div class="card">
-            Total possible outcomes
-            <strong id="focus-total">220</strong>
-          </div>
-        </div>
-
-        <p id="focus-note" class="muted" style="margin-top:16px;"></p>
+        <h2>Task 10 On The Current Draw</h2>
 
         <div class="sequence-box">
-          <strong>Physical draw on screen</strong>
+          <strong>Physical order on screen</strong>
           <div id="physical-sequence" class="chip-line"></div>
         </div>
 
-        <div class="detail-grid">
-          <div class="panel-card">
-            <h3>Recorded Object</h3>
-            <p id="outcome-meaning" class="muted"></p>
-          </div>
-          <div class="panel-card">
-            <h3>Rule Applied To This Draw</h3>
-            <p id="draw-meaning" class="muted"></p>
-          </div>
+        <div class="task-grid">
+          <article class="task-card">
+            <h3>1. Samples if order is ignored</h3>
+            <div class="formula">C(12,3) = 220</div>
+            <p class="muted"><strong>Current sample:</strong> <span id="sample-outcome">-</span></p>
+            <p class="muted" id="sample-read">No draw yet.</p>
+            <p class="muted">We keep the 3 specific balls, but we remove the extraction order.</p>
+          </article>
+
+          <article class="task-card">
+            <h3>2. Samples with exactly two red balls</h3>
+            <div class="formula">C(5,2) * C(7,1) = 70</div>
+            <p class="muted"><strong>Current draw qualifies?</strong> <span id="sample-event">Need 3 draws</span></p>
+            <p class="muted" id="sample-event-read">We need all 3 draws to test the event.</p>
+            <p class="muted">Choose 2 of the 5 red balls and 1 of the 7 non-red balls.</p>
+          </article>
+
+          <article class="task-card">
+            <h3>3. Outcomes if the order of colors is recorded</h3>
+            <div class="formula">3^3 = 27</div>
+            <p class="muted"><strong>Current color outcome:</strong> <span id="color-outcome">-</span></p>
+            <p class="muted" id="color-read">No draw yet.</p>
+            <p class="muted">We keep only the color in position 1, 2, and 3.</p>
+          </article>
+
+          <article class="task-card">
+            <h3>4. Color outcomes with exactly two red</h3>
+            <div class="formula">C(3,1) * 2 = 6</div>
+            <p class="muted"><strong>Current color outcome qualifies?</strong> <span id="color-event">Need 3 draws</span></p>
+            <p class="muted" id="color-event-read">We need all 3 draws to test the event.</p>
+            <p class="muted">Choose the position of the non-red color, then choose whether that color is blue or green.</p>
+          </article>
         </div>
 
-        <div class="detail-grid">
-          <div class="panel-card">
-            <h3>What We Keep</h3>
-            <p id="keep-meaning" class="muted"></p>
-          </div>
-          <div class="panel-card">
-            <h3>What We Ignore</h3>
-            <p id="discard-meaning" class="muted"></p>
-          </div>
+        <div class="sequence-box">
+          <strong>The 6 ordered color outcomes with exactly two red</strong>
+          <div class="chip-line" id="target-sequences"></div>
         </div>
 
-        <div class="panel-card focus-breakdown">
-          <h3>Why This Count Works</h3>
-          <div class="formula" id="focus-formula-expanded">C(12,3) = 12·11·10 / (3·2·1) = 220</div>
-          <p id="formula-meaning" class="muted"></p>
+        <div class="formula" id="counting-note">
+          Important: 27 counts distinct color sequences for Task 10, but these 27 sequences are not equally likely in the physical experiment.
         </div>
       </article>
     </section>
 
-    <section class="record-intro">
-      <h2>Same Draw Rewritten Three Ways</h2>
+    <section class="panel history-panel">
+      <h2>Recent Experiments</h2>
       <p class="muted">
-        The extraction above stays the same. These cards show how the recorded outcome changes
-        when we keep labels, keep order, or ignore both.
+        Each row shows the same run written in the two task formats: an unordered sample of labeled balls
+        and an ordered sequence of colors.
       </p>
-    </section>
-
-    <section id="record-grid" class="record-grid"></section>
-
-    <section class="legend-grid">
-      <article class="card">
-        <h2>Labels And Colors</h2>
-        <div class="legend-row"><span class="mini-ball red">R1</span><span><strong>R1</strong> means one specific red ball.</span></div>
-        <div class="legend-row"><span class="mini-ball blue">B3</span><span><strong>B3</strong> means one specific blue ball.</span></div>
-        <div class="legend-row"><span class="mini-ball green">G2</span><span><strong>G2</strong> means one specific green ball.</span></div>
-      </article>
-
-      <article class="card">
-        <h2>Animation States</h2>
-        <ul>
-          <li>bright ball -> still inside the urn</li>
-          <li>faded ball -> already removed</li>
-          <li>highlighted ball -> currently being drawn</li>
-          <li>draw slots -> the physical order of extraction</li>
-        </ul>
-      </article>
-
-      <article class="card">
-        <h2>How To Read The Screen</h2>
-        <ul>
-          <li><strong>left panel:</strong> all 12 physical balls before and after removal</li>
-          <li><strong>draw slots:</strong> the actual extraction sequence</li>
-          <li><strong>cards below:</strong> the same draw rewritten under each recording rule</li>
-          <li><strong>right panel:</strong> the currently highlighted counting model</li>
-        </ul>
-      </article>
+      <div class="history-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Physical order</th>
+              <th>Order ignored</th>
+              <th>Color order</th>
+              <th>Red count</th>
+              <th>Exactly two red?</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr>
+              <td colspan="6" class="muted">No finished experiments yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section class="notes">
       <article class="card">
-        <h2>Same Physical Experiment</h2>
+        <h2>Why 220?</h2>
         <ul>
-          <li>the urn contents do not change across the three models</li>
-          <li>the draw is always three balls without replacement</li>
-          <li>only the mathematical recording rule changes</li>
+          <li>There are 12 labeled balls in the urn.</li>
+          <li>Order ignored means we choose a 3-ball set.</li>
+          <li>That is the combination count C(12,3).</li>
         </ul>
       </article>
 
       <article class="card">
-        <h2>Recording Rule</h2>
+        <h2>Why 70 And 6?</h2>
         <ul>
-          <li>sometimes labels such as R2 and B4 matter</li>
-          <li>sometimes only the color pattern matters</li>
-          <li>sometimes extraction order matters and sometimes it is removed</li>
+          <li>70 counts labeled 3-ball samples with exactly two red.</li>
+          <li>6 counts only color sequences with exactly two red.</li>
+          <li>Different recording rules create different kinds of outcomes.</li>
         </ul>
       </article>
 
       <article class="card">
-        <h2>Counting Consequence</h2>
+        <h2>What Changes?</h2>
         <ul>
-          <li>different outcome meanings create different sample spaces</li>
-          <li>different sample spaces require different counting formulas</li>
-          <li>that is why 220, 27, and 10 all come from the same experiment</li>
+          <li>Task 1-2 keep exact ball identities and ignore order.</li>
+          <li>Task 3-4 ignore identities and keep color order.</li>
+          <li>The draw is the same, but the mathematical outcome changes.</li>
         </ul>
       </article>
     </section>
   </main>
 
   <script>
-    const focusMode = document.getElementById("focus-mode");
     const drawOneButton = document.getElementById("draw-one");
     const drawThreeButton = document.getElementById("draw-three");
+    const newDrawButton = document.getElementById("new-draw");
     const autoDemoButton = document.getElementById("auto-demo");
-    const resetButton = document.getElementById("reset");
+    const clearAllButton = document.getElementById("clear-all");
+
     const urnGrid = document.getElementById("urn-grid");
     const drawGrid = document.getElementById("draw-grid");
-    const recordGrid = document.getElementById("record-grid");
-    const focusTitle = document.getElementById("focus-title");
-    const focusOutcome = document.getElementById("focus-outcome");
-    const focusTotal = document.getElementById("focus-total");
-    const focusFormula = document.getElementById("focus-formula");
-    const focusNote = document.getElementById("focus-note");
-    const focusFormulaExpanded = document.getElementById("focus-formula-expanded");
     const physicalSequence = document.getElementById("physical-sequence");
-    const outcomeMeaning = document.getElementById("outcome-meaning");
-    const formulaMeaning = document.getElementById("formula-meaning");
-    const drawMeaning = document.getElementById("draw-meaning");
-    const keepMeaning = document.getElementById("keep-meaning");
-    const discardMeaning = document.getElementById("discard-meaning");
+    const redCountLabel = document.getElementById("red-count");
+    const currentEventLabel = document.getElementById("current-event");
+    const runCountLabel = document.getElementById("run-count");
+    const hitCountLabel = document.getElementById("hit-count");
+    const empiricalFrequencyLabel = document.getElementById("empirical-frequency");
+
+    const sampleOutcome = document.getElementById("sample-outcome");
+    const sampleRead = document.getElementById("sample-read");
+    const sampleEvent = document.getElementById("sample-event");
+    const sampleEventRead = document.getElementById("sample-event-read");
+    const colorOutcome = document.getElementById("color-outcome");
+    const colorRead = document.getElementById("color-read");
+    const colorEvent = document.getElementById("color-event");
+    const colorEventRead = document.getElementById("color-event-read");
+    const targetSequences = document.getElementById("target-sequences");
+    const historyBody = document.getElementById("history-body");
 
     const allBalls = [
       { id: "R1", color: "red" }, { id: "R2", color: "red" }, { id: "R3", color: "red" }, { id: "R4", color: "red" }, { id: "R5", color: "red" },
@@ -603,55 +556,23 @@
       { id: "G1", color: "green" }, { id: "G2", color: "green" }, { id: "G3", color: "green" }
     ];
 
-    const modeMeta = {
-      actual_unordered: {
-        title: "Actual balls, order ignored",
-        total: "220",
-        formula: "C(12,3) = 220",
-        note: "Keep the identities of the three balls. Ignore the order in which they came out.",
-        outcomeMeaning: "One mathematical outcome is an unordered set of three specific labeled balls, for example {R2, B4, G1}.",
-        formulaMeaning: "There are 12 distinguishable balls and we choose 3 of them. Because order is discarded, each 3-ball set is counted once, not 3! times.",
-        formulaExpanded: "C(12,3) = 12·11·10 / (3·2·1) = 220",
-        drawMeaning: "The animation still extracts balls in first, second, and third position, but this model compresses that sequence into a set.",
-        keepMeaning: "The exact identities of the chosen balls. R2 and R5 are treated as different outcomes because they are different physical balls.",
-        discardMeaning: "The extraction order. R2 → B4 → G1 and G1 → R2 → B4 represent the same recorded outcome here.",
-        shortKeep: "specific ball identities",
-        shortIgnore: "extraction order",
-      },
-      colors_ordered: {
-        title: "Colors only, order recorded",
-        total: "27",
-        formula: "3^3 = 27",
-        note: "Ignore labels such as R2 and B4, but keep the color in first, second, and third position.",
-        outcomeMeaning: "One mathematical outcome is an ordered color sequence, for example (R, B, G).",
-        formulaMeaning: "There are 3 recorded options in position 1, 3 in position 2, and 3 in position 3. The product rule gives 3 × 3 × 3 outcomes.",
-        formulaExpanded: "3 × 3 × 3 = 3^3 = 27",
-        drawMeaning: "The draw slots keep their order, but every label is replaced by just its color. R2 and R5 both become R.",
-        keepMeaning: "The color attached to each draw position: first, second, and third.",
-        discardMeaning: "Which particular ball produced the color. All red balls collapse to the same symbol R.",
-        shortKeep: "ordered color sequence",
-        shortIgnore: "ball labels",
-      },
-      colors_unordered: {
-        title: "Colors only, order ignored",
-        total: "10",
-        formula: "C(3+3-1,3) = C(5,3) = 10",
-        note: "Ignore labels and ignore order. Keep only how many reds, blues, and greens were drawn.",
-        outcomeMeaning: "One mathematical outcome is an unordered multiset of colors, for example {R, R, G}.",
-        formulaMeaning: "This is combinations with repetition. Equivalently, it counts nonnegative solutions of r + b + g = 3, where r, b, g are the final color counts.",
-        formulaExpanded: "r + b + g = 3  →  C(3+3-1,3) = C(5,3) = 10",
-        drawMeaning: "This model compresses the sequence twice: first it removes labels, then it removes the order of the color sequence.",
-        keepMeaning: "Only the final color collection, such as 2 red and 1 green.",
-        discardMeaning: "Both the ball identities and the order in which the colors appeared during the draw.",
-        shortKeep: "color counts only",
-        shortIgnore: "labels and order",
-      }
-    };
+    const targetColorSequences = [
+      ["R", "R", "B"],
+      ["R", "B", "R"],
+      ["B", "R", "R"],
+      ["R", "R", "G"],
+      ["R", "G", "R"],
+      ["G", "R", "R"]
+    ];
 
     let remaining = [];
     let drawn = [];
     let autoTimer = null;
     let stepLock = false;
+    let history = [];
+    let runCount = 0;
+    let hitCount = 0;
+    let loggedCurrentDraw = false;
 
     function shuffle(items) {
       const copy = [...items];
@@ -660,6 +581,76 @@
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
+    }
+
+    function colorLetter(color) {
+      if (color === "red") {
+        return "R";
+      }
+      if (color === "blue") {
+        return "B";
+      }
+      return "G";
+    }
+
+    function redCount() {
+      return drawn.filter((ball) => ball.color === "red").length;
+    }
+
+    function fullDrawReady() {
+      return drawn.length === 3;
+    }
+
+    function exactlyTwoRed() {
+      return fullDrawReady() && redCount() === 2;
+    }
+
+    function chipLineMarkup(tokens, ordered = false) {
+      if (tokens.length === 0) {
+        return `<span class="muted">No draw yet</span>`;
+      }
+
+      return tokens.map((token, index) => {
+        const chip = `<span class="chip ${token.color}">${token.label}</span>`;
+        if (!ordered || index === tokens.length - 1) {
+          return chip;
+        }
+        return `${chip}<span class="chip-arrow">-&gt;</span>`;
+      }).join("");
+    }
+
+    function physicalTokens() {
+      return drawn.map((ball) => ({ label: ball.id, color: ball.color }));
+    }
+
+    function unorderedSampleString() {
+      if (drawn.length === 0) {
+        return "-";
+      }
+      const ids = [...drawn].map((ball) => ball.id).sort();
+      return `{${ids.join(", ")}}`;
+    }
+
+    function orderedColorString() {
+      if (drawn.length === 0) {
+        return "-";
+      }
+      const colors = drawn.map((ball) => colorLetter(ball.color));
+      return `(${colors.join(", ")})`;
+    }
+
+    function physicalOrderString() {
+      if (drawn.length === 0) {
+        return "-";
+      }
+      return drawn.map((ball) => ball.id).join(" -> ");
+    }
+
+    function currentEventText() {
+      if (!fullDrawReady()) {
+        return "Need 3 draws";
+      }
+      return exactlyTwoRed() ? "Yes" : "No";
     }
 
     function renderUrn(highlightId = null) {
@@ -697,115 +688,131 @@
       }
     }
 
-    function currentOutcome(mode) {
-      if (drawn.length === 0) {
-        return "-";
-      }
-
-      if (mode === "actual_unordered") {
-        const ids = [...drawn].map((ball) => ball.id).sort();
-        return `{${ids.join(", ")}}`;
-      }
-
-      if (mode === "colors_ordered") {
-        const colors = drawn.map((ball) => ball.id[0]);
-        return `(${colors.join(", ")})`;
-      }
-
-      const colorOrder = { R: 0, B: 1, G: 2 };
-      const colors = drawn.map((ball) => ball.id[0]).sort((a, b) => colorOrder[a] - colorOrder[b]);
-      return `{${colors.join(", ")}}`;
+    function renderTargets() {
+      targetSequences.innerHTML = targetColorSequences.map((sequence) => {
+        return sequence.map((letter, index) => {
+          const color = letter === "R" ? "red" : (letter === "B" ? "blue" : "green");
+          const chip = `<span class="chip ${color}">${letter}</span>`;
+          if (index === sequence.length - 1) {
+            return chip;
+          }
+          return `${chip}<span class="chip-arrow">-&gt;</span>`;
+        }).join("");
+      }).join('<span class="chip-arrow" style="margin: 0 8px;">|</span>');
     }
 
-    function colorLetter(color) {
-      if (color === "red") {
-        return "R";
-      }
-      if (color === "blue") {
-        return "B";
-      }
-      return "G";
-    }
-
-    function outcomeTokens(mode) {
-      if (drawn.length === 0) {
-        return [];
+    function renderHistory() {
+      if (history.length === 0) {
+        historyBody.innerHTML = `<tr><td colspan="6" class="muted">No finished experiments yet.</td></tr>`;
+        return;
       }
 
-      if (mode === "actual_unordered") {
-        return [...drawn]
-          .sort((a, b) => a.id.localeCompare(b.id))
-          .map((ball) => ({ label: ball.id, color: ball.color }));
-      }
-
-      if (mode === "colors_ordered") {
-        return drawn.map((ball) => ({ label: colorLetter(ball.color), color: ball.color }));
-      }
-
-      const colorOrder = { red: 0, blue: 1, green: 2 };
-      return [...drawn]
-        .sort((a, b) => colorOrder[a.color] - colorOrder[b.color] || a.id.localeCompare(b.id))
-        .map((ball) => ({ label: colorLetter(ball.color), color: ball.color }));
-    }
-
-    function chipLineMarkup(tokens, ordered = false) {
-      if (tokens.length === 0) {
-        return `<span class="muted">No draw yet</span>`;
-      }
-
-      return tokens.map((token, index) => {
-        const chip = `<span class="chip ${token.color}">${token.label}</span>`;
-        if (!ordered || index === tokens.length - 1) {
-          return chip;
-        }
-        return `${chip}<span class="chip-arrow">→</span>`;
+      historyBody.innerHTML = history.map((entry) => {
+        return `
+          <tr>
+            <td>${entry.run}</td>
+            <td>${entry.physical}</td>
+            <td>${entry.sample}</td>
+            <td>${entry.colors}</td>
+            <td>${entry.reds}</td>
+            <td class="${entry.hit ? "yes" : "no"}">${entry.hit ? "Yes" : "No"}</td>
+          </tr>
+        `;
       }).join("");
     }
 
-    function renderRecords() {
-      recordGrid.innerHTML = "";
-      const active = focusMode.value;
+    function logFinishedDraw() {
+      if (!fullDrawReady() || loggedCurrentDraw) {
+        return;
+      }
 
-      Object.entries(modeMeta).forEach(([mode, meta]) => {
-        const card = document.createElement("article");
-        card.className = `record-card${mode === active ? " active" : ""}`;
-        card.innerHTML = `
-          <h2>${meta.title}</h2>
-          <div class="formula">${meta.formula}</div>
-          <div class="chip-line">${chipLineMarkup(outcomeTokens(mode), mode === "colors_ordered")}</div>
-          <p class="muted record-copy"><strong>Recorded outcome:</strong> ${currentOutcome(mode)}</p>
-          <p class="muted"><strong>Keeps:</strong> ${meta.shortKeep}</p>
-          <p class="muted"><strong>Ignores:</strong> ${meta.shortIgnore}</p>
-          <p class="muted">${meta.note}</p>
-        `;
-        recordGrid.appendChild(card);
+      runCount += 1;
+      if (exactlyTwoRed()) {
+        hitCount += 1;
+      }
+
+      history.unshift({
+        run: runCount,
+        physical: drawn.map((ball) => ball.id).join(" -> "),
+        sample: unorderedSampleString(),
+        colors: orderedColorString(),
+        reds: redCount(),
+        hit: exactlyTwoRed()
       });
+
+      history = history.slice(0, 10);
+      loggedCurrentDraw = true;
+      renderHistory();
     }
 
-    function updateFocus() {
-      const meta = modeMeta[focusMode.value];
-      focusTitle.textContent = meta.title;
-      focusOutcome.textContent = currentOutcome(focusMode.value);
-      focusTotal.textContent = meta.total;
-      focusFormula.textContent = meta.formula;
-      focusFormulaExpanded.textContent = meta.formulaExpanded;
-      focusNote.textContent = meta.note;
-      physicalSequence.innerHTML = chipLineMarkup(drawn.map((ball) => ({ label: ball.id, color: ball.color })), true);
-      outcomeMeaning.textContent = meta.outcomeMeaning;
-      keepMeaning.textContent = meta.keepMeaning;
-      discardMeaning.textContent = meta.discardMeaning;
-      formulaMeaning.textContent = meta.formulaMeaning;
-      drawMeaning.textContent = drawn.length === 0 ? meta.drawMeaning : `${meta.drawMeaning} For the current draw, the recorded outcome becomes ${currentOutcome(focusMode.value)}.`;
-      renderRecords();
+    function updatePanels() {
+      physicalSequence.innerHTML = chipLineMarkup(physicalTokens(), true);
+      sampleOutcome.textContent = unorderedSampleString();
+      colorOutcome.textContent = orderedColorString();
+
+      if (drawn.length === 0) {
+        sampleRead.textContent = "No draw yet.";
+        colorRead.textContent = "No draw yet.";
+      } else {
+        sampleRead.textContent = `Current translation: ${physicalOrderString()} becomes ${unorderedSampleString()} when order is removed.`;
+        colorRead.textContent = `Current translation: ${physicalOrderString()} becomes ${orderedColorString()} when labels are replaced by colors.`;
+      }
+
+      const eventText = currentEventText();
+      redCountLabel.textContent = String(redCount());
+      currentEventLabel.textContent = eventText;
+      currentEventLabel.className = fullDrawReady() ? (exactlyTwoRed() ? "yes" : "no") : "";
+      sampleEvent.textContent = eventText;
+      sampleEvent.className = fullDrawReady() ? (exactlyTwoRed() ? "yes" : "no") : "";
+      colorEvent.textContent = eventText;
+      colorEvent.className = fullDrawReady() ? (exactlyTwoRed() ? "yes" : "no") : "";
+
+      if (!fullDrawReady()) {
+        sampleEventRead.textContent = "We need all 3 draws to test whether exactly two are red.";
+        colorEventRead.textContent = "We need all 3 color positions before comparing with the 6 target sequences.";
+      } else if (exactlyTwoRed()) {
+        const nonRedBall = drawn.find((ball) => ball.color !== "red");
+        const nonRedPosition = drawn.findIndex((ball) => ball.color !== "red") + 1;
+        sampleEventRead.textContent = `This draw has 2 red balls and 1 non-red ball (${nonRedBall.id}), so it belongs to the 70 favorable samples.`;
+        colorEventRead.textContent = `This color sequence has one non-red entry in position ${nonRedPosition}, so it is one of the 6 favorable ordered color outcomes.`;
+      } else {
+        sampleEventRead.textContent = `This draw has ${redCount()} red ball(s), so it does not belong to the set of samples with exactly two red.`;
+        colorEventRead.textContent = `This color sequence has ${redCount()} red entry/entries, so it is not one of the 6 target sequences.`;
+      }
+
+      runCountLabel.textContent = String(runCount);
+      hitCountLabel.textContent = String(hitCount);
+      empiricalFrequencyLabel.textContent = runCount === 0 ? "0.0000" : (hitCount / runCount).toFixed(4);
+
+      if (fullDrawReady()) {
+        logFinishedDraw();
+        runCountLabel.textContent = String(runCount);
+        hitCountLabel.textContent = String(hitCount);
+        empiricalFrequencyLabel.textContent = runCount === 0 ? "0.0000" : (hitCount / runCount).toFixed(4);
+      }
     }
 
-    function resetAll() {
+    function resetCurrentDraw() {
       remaining = shuffle(allBalls);
       drawn = [];
       stepLock = false;
+      loggedCurrentDraw = false;
       renderUrn();
       renderDraw();
-      updateFocus();
+      updatePanels();
+    }
+
+    function clearAll() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        autoDemoButton.textContent = "Auto Run";
+      }
+      history = [];
+      runCount = 0;
+      hitCount = 0;
+      renderHistory();
+      resetCurrentDraw();
     }
 
     function drawOne(animated = true) {
@@ -823,24 +830,18 @@
         drawn.push(next);
         renderUrn();
         renderDraw(drawn.length - 1);
-        updateFocus();
         stepLock = false;
+        updatePanels();
       }, animated ? 260 : 0);
     }
 
-    function drawThreeSequence() {
-      if (autoTimer && drawn.length === 3) {
-        resetAll();
-      }
+    function completeDraw() {
       if (drawn.length === 3) {
         return;
       }
-      drawOne(true);
-      if (drawn.length < 2) {
-        setTimeout(() => drawOne(true), 420);
-      }
-      if (drawn.length < 1) {
-        setTimeout(() => drawOne(true), 840);
+      const needed = 3 - drawn.length;
+      for (let i = 0; i < needed; i += 1) {
+        setTimeout(() => drawOne(true), i * 420);
       }
     }
 
@@ -848,33 +849,29 @@
       if (autoTimer) {
         clearInterval(autoTimer);
         autoTimer = null;
-        autoDemoButton.textContent = "Auto Demo";
+        autoDemoButton.textContent = "Auto Run";
         return;
       }
 
+      const runCycle = () => {
+        resetCurrentDraw();
+        completeDraw();
+      };
+
       autoDemoButton.textContent = "Pause";
-      resetAll();
-      drawThreeSequence();
-      autoTimer = setInterval(() => {
-        resetAll();
-        drawThreeSequence();
-      }, 3200);
+      runCycle();
+      autoTimer = setInterval(runCycle, 2600);
     }
 
-    focusMode.addEventListener("change", updateFocus);
     drawOneButton.addEventListener("click", () => drawOne(true));
-    drawThreeButton.addEventListener("click", drawThreeSequence);
+    drawThreeButton.addEventListener("click", completeDraw);
+    newDrawButton.addEventListener("click", resetCurrentDraw);
     autoDemoButton.addEventListener("click", toggleAutoDemo);
-    resetButton.addEventListener("click", () => {
-      if (autoTimer) {
-        clearInterval(autoTimer);
-        autoTimer = null;
-        autoDemoButton.textContent = "Auto Demo";
-      }
-      resetAll();
-    });
+    clearAllButton.addEventListener("click", clearAll);
 
-    resetAll();
+    renderTargets();
+    renderHistory();
+    resetCurrentDraw();
   </script>
 </body>
 </html>
