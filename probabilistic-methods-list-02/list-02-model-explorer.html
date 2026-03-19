@@ -315,6 +315,28 @@
       margin-top: 12px;
     }
 
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .panel-card {
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .panel-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .focus-breakdown {
+      margin-top: 16px;
+    }
+
     ul {
       margin: 0;
       padding-left: 1.15rem;
@@ -328,8 +350,7 @@
       margin-top: 24px;
     }
 
-    .legend-grid,
-    .explain-grid {
+    .legend-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
@@ -372,9 +393,9 @@
       .lab,
       .notes,
       .legend-grid,
-      .explain-grid,
       .record-grid,
-      .summary {
+      .summary,
+      .detail-grid {
         grid-template-columns: 1fr;
       }
 
@@ -454,6 +475,34 @@
           <strong>Physical draw on screen</strong>
           <div id="physical-sequence" class="chip-line"></div>
         </div>
+
+        <div class="detail-grid">
+          <div class="panel-card">
+            <h3>Recorded Object</h3>
+            <p id="outcome-meaning" class="muted"></p>
+          </div>
+          <div class="panel-card">
+            <h3>Rule Applied To This Draw</h3>
+            <p id="draw-meaning" class="muted"></p>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="panel-card">
+            <h3>What We Keep</h3>
+            <p id="keep-meaning" class="muted"></p>
+          </div>
+          <div class="panel-card">
+            <h3>What We Ignore</h3>
+            <p id="discard-meaning" class="muted"></p>
+          </div>
+        </div>
+
+        <div class="panel-card focus-breakdown">
+          <h3>Why This Count Works</h3>
+          <div class="formula" id="focus-formula-expanded">C(12,3) = 12·11·10 / (3·2·1) = 220</div>
+          <p id="formula-meaning" class="muted"></p>
+        </div>
       </article>
     </section>
 
@@ -493,23 +542,6 @@
           <li><strong>cards below:</strong> the same draw rewritten under each recording rule</li>
           <li><strong>right panel:</strong> the currently highlighted counting model</li>
         </ul>
-      </article>
-    </section>
-
-    <section class="explain-grid">
-      <article class="card">
-        <h2>What Is One Outcome Here?</h2>
-        <p id="outcome-meaning" class="muted"></p>
-      </article>
-
-      <article class="card">
-        <h2>Why This Formula?</h2>
-        <p id="formula-meaning" class="muted"></p>
-      </article>
-
-      <article class="card">
-        <h2>How To Interpret The Current Draw</h2>
-        <p id="draw-meaning" class="muted"></p>
       </article>
     </section>
 
@@ -557,10 +589,13 @@
     const focusTotal = document.getElementById("focus-total");
     const focusFormula = document.getElementById("focus-formula");
     const focusNote = document.getElementById("focus-note");
+    const focusFormulaExpanded = document.getElementById("focus-formula-expanded");
     const physicalSequence = document.getElementById("physical-sequence");
     const outcomeMeaning = document.getElementById("outcome-meaning");
     const formulaMeaning = document.getElementById("formula-meaning");
     const drawMeaning = document.getElementById("draw-meaning");
+    const keepMeaning = document.getElementById("keep-meaning");
+    const discardMeaning = document.getElementById("discard-meaning");
 
     const allBalls = [
       { id: "R1", color: "red" }, { id: "R2", color: "red" }, { id: "R3", color: "red" }, { id: "R4", color: "red" }, { id: "R5", color: "red" },
@@ -574,27 +609,42 @@
         total: "220",
         formula: "C(12,3) = 220",
         note: "Keep the identities of the three balls. Ignore the order in which they came out.",
-        outcomeMeaning: "One outcome is an unordered set of three specific labeled balls, for example {R2, B4, G1}. If the same three balls are drawn in a different order, it is still the same mathematical outcome.",
-        formulaMeaning: "There are 12 physical balls in the urn and we choose 3 of them. Order is ignored, so the correct count is the combination C(12,3).",
-        drawMeaning: "The draw slots still show the physical order in which the balls came out, but this mode throws that order away and keeps only the selected set of labeled balls.",
+        outcomeMeaning: "One mathematical outcome is an unordered set of three specific labeled balls, for example {R2, B4, G1}.",
+        formulaMeaning: "There are 12 distinguishable balls and we choose 3 of them. Because order is discarded, each 3-ball set is counted once, not 3! times.",
+        formulaExpanded: "C(12,3) = 12·11·10 / (3·2·1) = 220",
+        drawMeaning: "The animation still extracts balls in first, second, and third position, but this model compresses that sequence into a set.",
+        keepMeaning: "The exact identities of the chosen balls. R2 and R5 are treated as different outcomes because they are different physical balls.",
+        discardMeaning: "The extraction order. R2 → B4 → G1 and G1 → R2 → B4 represent the same recorded outcome here.",
+        shortKeep: "specific ball identities",
+        shortIgnore: "extraction order",
       },
       colors_ordered: {
         title: "Colors only, order recorded",
         total: "27",
         formula: "3^3 = 27",
         note: "Ignore labels such as R2 and B4, but keep the color in first, second, and third position.",
-        outcomeMeaning: "One outcome is an ordered color sequence, for example (R, B, G). Here RBG and GRB are different outcomes because the order of colors is part of the record.",
-        formulaMeaning: "Each draw position can be recorded as red, blue, or green. Repetition of colors is possible because the urn contains several balls of each color, so every ordered color triple is possible and the count is 3 x 3 x 3 = 3^3.",
-        drawMeaning: "The labels R2 or B4 disappear in this mode. Only the color in each position remains, so the three draw slots become an ordered sequence of colors.",
+        outcomeMeaning: "One mathematical outcome is an ordered color sequence, for example (R, B, G).",
+        formulaMeaning: "There are 3 recorded options in position 1, 3 in position 2, and 3 in position 3. The product rule gives 3 × 3 × 3 outcomes.",
+        formulaExpanded: "3 × 3 × 3 = 3^3 = 27",
+        drawMeaning: "The draw slots keep their order, but every label is replaced by just its color. R2 and R5 both become R.",
+        keepMeaning: "The color attached to each draw position: first, second, and third.",
+        discardMeaning: "Which particular ball produced the color. All red balls collapse to the same symbol R.",
+        shortKeep: "ordered color sequence",
+        shortIgnore: "ball labels",
       },
       colors_unordered: {
         title: "Colors only, order ignored",
         total: "10",
         formula: "C(3+3-1,3) = C(5,3) = 10",
         note: "Ignore labels and ignore order. Keep only how many reds, blues, and greens were drawn.",
-        outcomeMeaning: "One outcome is an unordered multiset of colors, for example {R, R, G}. Here RRG, RGR, and GRR all describe the same outcome because only the final color collection matters.",
-        formulaMeaning: "We are choosing 3 items from the 3 color types with repetition allowed at the color level, so this is combinations with repetition: C(3+3-1,3) = C(5,3).",
-        drawMeaning: "The draw slots still visualize the physical process, but this mode compresses them to a color multiset. Labels are ignored and order is ignored too.",
+        outcomeMeaning: "One mathematical outcome is an unordered multiset of colors, for example {R, R, G}.",
+        formulaMeaning: "This is combinations with repetition. Equivalently, it counts nonnegative solutions of r + b + g = 3, where r, b, g are the final color counts.",
+        formulaExpanded: "r + b + g = 3  →  C(3+3-1,3) = C(5,3) = 10",
+        drawMeaning: "This model compresses the sequence twice: first it removes labels, then it removes the order of the color sequence.",
+        keepMeaning: "Only the final color collection, such as 2 red and 1 green.",
+        discardMeaning: "Both the ball identities and the order in which the colors appeared during the draw.",
+        shortKeep: "color counts only",
+        shortIgnore: "labels and order",
       }
     };
 
@@ -662,7 +712,8 @@
         return `(${colors.join(", ")})`;
       }
 
-      const colors = drawn.map((ball) => ball.id[0]).sort();
+      const colorOrder = { R: 0, B: 1, G: 2 };
+      const colors = drawn.map((ball) => ball.id[0]).sort((a, b) => colorOrder[a] - colorOrder[b]);
       return `{${colors.join(", ")}}`;
     }
 
@@ -723,6 +774,8 @@
           <div class="formula">${meta.formula}</div>
           <div class="chip-line">${chipLineMarkup(outcomeTokens(mode), mode === "colors_ordered")}</div>
           <p class="muted record-copy"><strong>Recorded outcome:</strong> ${currentOutcome(mode)}</p>
+          <p class="muted"><strong>Keeps:</strong> ${meta.shortKeep}</p>
+          <p class="muted"><strong>Ignores:</strong> ${meta.shortIgnore}</p>
           <p class="muted">${meta.note}</p>
         `;
         recordGrid.appendChild(card);
@@ -735,11 +788,14 @@
       focusOutcome.textContent = currentOutcome(focusMode.value);
       focusTotal.textContent = meta.total;
       focusFormula.textContent = meta.formula;
+      focusFormulaExpanded.textContent = meta.formulaExpanded;
       focusNote.textContent = meta.note;
       physicalSequence.innerHTML = chipLineMarkup(drawn.map((ball) => ({ label: ball.id, color: ball.color })), true);
       outcomeMeaning.textContent = meta.outcomeMeaning;
+      keepMeaning.textContent = meta.keepMeaning;
+      discardMeaning.textContent = meta.discardMeaning;
       formulaMeaning.textContent = meta.formulaMeaning;
-      drawMeaning.textContent = drawn.length === 0 ? meta.drawMeaning : `${meta.drawMeaning} Current draw interpreted in this mode: ${currentOutcome(focusMode.value)}.`;
+      drawMeaning.textContent = drawn.length === 0 ? meta.drawMeaning : `${meta.drawMeaning} For the current draw, the recorded outcome becomes ${currentOutcome(focusMode.value)}.`;
       renderRecords();
     }
 
