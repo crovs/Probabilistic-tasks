@@ -117,7 +117,7 @@
     .demo-grid {
       margin-top: 24px;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 22px;
     }
 
@@ -140,6 +140,10 @@
       align-items: center;
       justify-content: center;
       margin: 14px 0;
+    }
+
+    .demo-card.wide {
+      grid-column: span 2;
     }
 
     .slot-row,
@@ -174,6 +178,11 @@
 
     .chip.sorted {
       background: #f7efe1;
+    }
+
+    .chip.fade {
+      opacity: 0.55;
+      background: #f6efe4;
     }
 
     .table-wrap {
@@ -240,6 +249,40 @@
 
     .block.bump {
       transform: translateY(-4px) scale(1.03);
+    }
+
+    .word-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .letter {
+      width: 44px;
+      height: 54px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transition: transform 280ms ease, background 280ms ease, opacity 280ms ease, box-shadow 280ms ease;
+    }
+
+    .letter.same {
+      background: #f7efe1;
+    }
+
+    .letter.flash {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 10px 18px rgba(180, 83, 9, 0.16);
+    }
+
+    .demo-note-strong {
+      color: var(--ink);
+      font-weight: 700;
     }
 
     .hidden {
@@ -337,6 +380,10 @@
       .grid,
       .control-grid {
         grid-template-columns: 1fr;
+      }
+
+      .demo-card.wide {
+        grid-column: span 1;
       }
     }
   </style>
@@ -490,7 +537,7 @@
     <section class="demo-grid">
       <article class="demo-card">
         <h2>Ordered vs Unordered</h2>
-        <p class="note">Fast intuition for sequence, combination, and <code>k</code>-permutation.</p>
+        <p class="note">Autoplay demo for sequence, combination, and <code>k</code>-permutation.</p>
 
         <div class="controls">
           <div class="control">
@@ -513,7 +560,7 @@
 
       <article class="demo-card">
         <h2>Circular Rotation</h2>
-        <p class="note">Same relative seating, different absolute rotation.</p>
+        <p class="note">Same relative seating, different absolute rotation. The animation repeats automatically.</p>
 
         <div class="controls">
           <button id="rotate-table">Rotate Table</button>
@@ -532,12 +579,12 @@
           </div>
         </div>
 
-        <p class="note">Rotation should not create a new circular arrangement.</p>
+        <p class="note"><span class="demo-note-strong">Point:</span> rotating the whole table does not create a new circular arrangement.</p>
       </article>
 
       <article class="demo-card">
         <h2>Block Method</h2>
-        <p class="note">Two people stay together, so first treat them as one block.</p>
+        <p class="note">Two people stay together, so first treat them as one block. The line reshuffles automatically.</p>
 
         <div class="controls">
           <button id="shuffle-block">Shuffle Line</button>
@@ -547,7 +594,22 @@
           <div id="block-stage" class="line-wrap"></div>
         </div>
 
-        <p class="note">Count the line with one merged block, then multiply by the internal order.</p>
+        <p class="note"><span class="demo-note-strong">Point:</span> count one merged block in the line, then multiply by the internal order.</p>
+      </article>
+
+      <article class="demo-card wide">
+        <h2>Repeated Elements</h2>
+        <p class="note">Why equal letters reduce the number of visible arrangements.</p>
+
+        <div class="controls">
+          <button id="repeat-demo">Run Swap Demo</button>
+        </div>
+
+        <div class="stage">
+          <div id="repeat-stage" class="word-wrap"></div>
+        </div>
+
+        <p id="repeat-caption" class="note"></p>
       </article>
     </section>
   </main>
@@ -588,6 +650,14 @@
     const tableRing = document.getElementById("table-ring");
     const shuffleBlock = document.getElementById("shuffle-block");
     const blockStage = document.getElementById("block-stage");
+    const repeatDemo = document.getElementById("repeat-demo");
+    const repeatStage = document.getElementById("repeat-stage");
+    const repeatCaption = document.getElementById("repeat-caption");
+
+    let orderedDemoTimer = null;
+    let rotateTimer = null;
+    let blockTimer = null;
+    let repeatTimer = null;
 
     function factorialBigInt(n) {
       if (n < 0) {
@@ -758,6 +828,13 @@
         : "k-permutation: ordered slots, no symbol repeats.";
     }
 
+    function startOrderedAutoplay() {
+      if (orderedDemoTimer) {
+        clearInterval(orderedDemoTimer);
+      }
+      orderedDemoTimer = setInterval(() => renderDemo(demoMode.value), 2800);
+    }
+
     function renderBlockLine() {
       blockStage.innerHTML = "";
       const others = shuffle(["C", "D", "E", "F", "G", "H"]);
@@ -786,6 +863,79 @@
           blockStage.appendChild(person);
         }
       });
+    }
+
+    function startRotationAutoplay() {
+      if (rotateTimer) {
+        clearInterval(rotateTimer);
+      }
+      rotateTimer = setInterval(() => {
+        tableRing.classList.remove("spin");
+        void tableRing.offsetWidth;
+        tableRing.classList.add("spin");
+      }, 3200);
+    }
+
+    function startBlockAutoplay() {
+      if (blockTimer) {
+        clearInterval(blockTimer);
+      }
+      blockTimer = setInterval(renderBlockLine, 3000);
+    }
+
+    function renderRepeatedDemo() {
+      repeatStage.innerHTML = "";
+      const letters = ["B", "A", "N", "A", "N", "A"];
+      const nodes = [];
+
+      letters.forEach((letter, index) => {
+        const node = document.createElement("div");
+        node.className = "letter";
+        if (letter === "A") {
+          node.classList.add("same");
+        }
+        node.textContent = letter;
+        node.dataset.index = String(index);
+        repeatStage.appendChild(node);
+        nodes.push(node);
+      });
+
+      const sameSwap = [1, 3];
+      const differentSwap = [0, 1];
+
+      setTimeout(() => {
+        nodes[sameSwap[0]].classList.add("flash");
+        nodes[sameSwap[1]].classList.add("flash");
+        repeatCaption.textContent = "Swap two A letters: visually nothing changes, so it is not a new arrangement.";
+      }, 250);
+
+      setTimeout(() => {
+        nodes[sameSwap[0]].classList.remove("flash");
+        nodes[sameSwap[1]].classList.remove("flash");
+      }, 1100);
+
+      setTimeout(() => {
+        const first = nodes[differentSwap[0]];
+        const second = nodes[differentSwap[1]];
+        first.classList.add("flash");
+        second.classList.add("flash");
+        const firstText = first.textContent;
+        first.textContent = second.textContent;
+        second.textContent = firstText;
+        repeatCaption.textContent = "Swap different letters: the word changes, so this does create a new visible arrangement.";
+      }, 1500);
+
+      setTimeout(() => {
+        nodes[differentSwap[0]].classList.remove("flash");
+        nodes[differentSwap[1]].classList.remove("flash");
+      }, 2500);
+    }
+
+    function startRepeatAutoplay() {
+      if (repeatTimer) {
+        clearInterval(repeatTimer);
+      }
+      repeatTimer = setInterval(renderRepeatedDemo, 3600);
     }
 
     function updateDecisionAssistant() {
@@ -977,18 +1127,27 @@
     });
 
     demoRun.addEventListener("click", () => renderDemo(demoMode.value));
-    demoMode.addEventListener("change", () => renderDemo(demoMode.value));
+    demoMode.addEventListener("change", () => {
+      renderDemo(demoMode.value);
+      startOrderedAutoplay();
+    });
     rotateTable.addEventListener("click", () => {
       tableRing.classList.remove("spin");
       void tableRing.offsetWidth;
       tableRing.classList.add("spin");
     });
     shuffleBlock.addEventListener("click", renderBlockLine);
+    repeatDemo.addEventListener("click", renderRepeatedDemo);
 
     updateDecisionAssistant();
     updateCalculator();
     renderDemo(demoMode.value);
     renderBlockLine();
+    renderRepeatedDemo();
+    startOrderedAutoplay();
+    startRotationAutoplay();
+    startBlockAutoplay();
+    startRepeatAutoplay();
   </script>
 </body>
 </html>
