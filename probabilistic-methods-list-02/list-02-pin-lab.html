@@ -256,6 +256,13 @@
       margin-top: 18px;
     }
 
+    .answer-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
     .task-card {
       padding: 18px;
       min-width: 0;
@@ -324,6 +331,7 @@
     @media (max-width: 1040px) {
       .lab,
       .task-grid,
+      .answer-strip,
       .summary,
       .notes {
         grid-template-columns: 1fr;
@@ -410,6 +418,21 @@
           <div id="current-code-line" class="chip-line"></div>
         </div>
 
+        <div class="answer-strip">
+          <div class="card">
+            Total PIN codes
+            <strong>100000</strong>
+          </div>
+          <div class="card">
+            At least one repeated digit
+            <strong>69760</strong>
+          </div>
+          <div class="card">
+            All digits different
+            <strong>30240</strong>
+          </div>
+        </div>
+
         <div class="task-grid">
           <article class="task-card">
             <h3>1. Total 5-digit PIN codes</h3>
@@ -420,7 +443,7 @@
 
           <article class="task-card">
             <h3>2. At least one repeated digit</h3>
-            <div class="formula">100000 - 30240 = 69760</div>
+            <div class="formula">10^5 - (10 * 9 * 8 * 7 * 6) = 69760</div>
             <p class="muted"><strong>Current code qualifies?</strong> <span id="repeat-event">Incomplete</span></p>
             <p class="muted" id="repeat-read">Complete the 5 positions to test this.</p>
           </article>
@@ -434,7 +457,7 @@
         </div>
 
         <div class="formula">
-          Theoretical repeat probability = 69760 / 100000 = 0.6976
+          Theoretical probabilities: repeated = 69760 / 100000 = 0.6976, all different = 30240 / 100000 = 0.3024
         </div>
       </article>
     </section>
