@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List 02 - Task 8 PIN Code Lab</title>
+  <style>
+    :root {
+      --bg: #f6efe6;
+      --panel: rgba(255, 251, 245, 0.94);
+      --ink: #1f2933;
+      --muted: #5d6672;
+      --accent: #0f766e;
+      --accent-2: #b45309;
+      --line: #d8c8ac;
+      --shadow: 0 18px 42px rgba(34, 28, 20, 0.12);
+      --repeat: #c2410c;
+      --unique: #0f766e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(180, 83, 9, 0.10), transparent 24%),
+        linear-gradient(180deg, #fbf7f0 0%, var(--bg) 100%);
+    }
+
+    main {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .hero,
+    .panel,
+    .card,
+    .task-card {
+      background: var(--panel);
+      border: 1px solid rgba(31, 41, 51, 0.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      padding: 28px;
+    }
+
+    .home-link {
+      display: inline-block;
+      margin-bottom: 14px;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent-2), #92400e);
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.55;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .lab {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .panel {
+      padding: 22px;
+      min-width: 0;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 16px 0 18px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), #155e75);
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, var(--accent-2), #9a3412);
+    }
+
+    .stage {
+      min-height: 320px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fffdf9 0%, #f6efe2 100%);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+    }
+
+    .bank-box,
+    .code-box {
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.55);
+      min-width: 0;
+    }
+
+    .digit-bank {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .digit-cell,
+    .code-slot,
+    .chip {
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .digit-cell {
+      height: 52px;
+      color: var(--ink);
+      background: #fffaf2;
+      border: 1px solid var(--line);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .digit-cell.pulse {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 18px rgba(31, 41, 51, 0.14);
+      border-color: var(--accent);
+    }
+
+    .code-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .code-slot {
+      height: 74px;
+      font-size: 1.3rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--unique), #155e75);
+      transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+    }
+
+    .code-slot.empty {
+      color: var(--muted);
+      background: #f4ede2;
+      border: 1px dashed var(--line);
+    }
+
+    .code-slot.repeated {
+      background: linear-gradient(135deg, #ea580c, var(--repeat));
+    }
+
+    .code-slot.pop {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 18px rgba(31, 41, 51, 0.14);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.05rem;
+    }
+
+    .sequence-box {
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+
+    .chip-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      min-height: 36px;
+    }
+
+    .chip {
+      min-width: 40px;
+      padding: 7px 12px;
+      font-size: 0.95rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--unique), #155e75);
+    }
+
+    .chip.repeated {
+      background: linear-gradient(135deg, #ea580c, var(--repeat));
+    }
+
+    .formula {
+      font-family: "Courier New", monospace;
+      background: #f7f1e6;
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin: 12px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .task-card {
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .task-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .history-panel,
+    .notes {
+      margin-top: 24px;
+    }
+
+    .history-panel {
+      padding: 22px;
+    }
+
+    .history-wrap {
+      overflow-x: auto;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .yes {
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .no {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.15rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1040px) {
+      .lab,
+      .task-grid,
+      .summary,
+      .notes {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <a class="home-link" href="../index.html">Back to Home</a>
+      <h1>List 02 - Task 8 PIN Code Lab</h1>
+      <p class="muted">
+        This page is built directly for Task 8. A PIN code is a 5-position sequence over the digits
+        0-9, repetitions are allowed, and leading zero is valid. The page generates codes,
+        classifies them, and compares simulation with the exact combinatorial counts.
+      </p>
+    </section>
+
+    <section class="lab">
+      <article class="panel">
+        <h2>PIN Code Generator</h2>
+        <p class="muted">Each position is chosen independently from the digits 0-9.</p>
+
+        <div class="controls">
+          <button id="draw-one">Add Digit</button>
+          <button id="draw-five">Complete Code</button>
+          <button id="new-code">New Code</button>
+          <button id="auto-demo">Auto Run</button>
+          <button id="clear-all" class="secondary">Clear All</button>
+        </div>
+
+        <div class="stage">
+          <div class="bank-box">
+            <h3>Available Digits</h3>
+            <p class="muted">The bank never shrinks because repetition is allowed.</p>
+            <div id="digit-bank" class="digit-bank"></div>
+          </div>
+
+          <div class="code-box">
+            <h3>Current PIN Code</h3>
+            <p class="muted">Five positions, and position order matters.</p>
+            <div id="code-row" class="code-row"></div>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="card">
+            Repeated digits in current code
+            <strong id="repeat-digits">-</strong>
+          </div>
+          <div class="card">
+            Current code type
+            <strong id="current-type">Incomplete</strong>
+          </div>
+          <div class="card">
+            Finished codes
+            <strong id="run-count">0</strong>
+          </div>
+          <div class="card">
+            Codes with repetition
+            <strong id="repeat-count">0</strong>
+          </div>
+          <div class="card">
+            Codes with all digits different
+            <strong id="unique-count">0</strong>
+          </div>
+          <div class="card">
+            Empirical repeat frequency
+            <strong id="empirical-repeat">0.0000</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Task 8 On The Current Code</h2>
+
+        <div class="sequence-box">
+          <strong>Current code on screen</strong>
+          <div id="current-code-line" class="chip-line"></div>
+        </div>
+
+        <div class="task-grid">
+          <article class="task-card">
+            <h3>1. Total 5-digit PIN codes</h3>
+            <div class="formula">10^5 = 100000</div>
+            <p class="muted"><strong>Reason:</strong> each of the 5 positions has 10 choices.</p>
+            <p class="muted">This is a sequence with repetition.</p>
+          </article>
+
+          <article class="task-card">
+            <h3>2. At least one repeated digit</h3>
+            <div class="formula">100000 - 30240 = 69760</div>
+            <p class="muted"><strong>Current code qualifies?</strong> <span id="repeat-event">Incomplete</span></p>
+            <p class="muted" id="repeat-read">Complete the 5 positions to test this.</p>
+          </article>
+
+          <article class="task-card">
+            <h3>3. All digits different</h3>
+            <div class="formula">10 * 9 * 8 * 7 * 6 = 30240</div>
+            <p class="muted"><strong>Current code qualifies?</strong> <span id="unique-event">Incomplete</span></p>
+            <p class="muted" id="unique-read">Complete the 5 positions to test this.</p>
+          </article>
+        </div>
+
+        <div class="formula">
+          Theoretical repeat probability = 69760 / 100000 = 0.6976
+        </div>
+      </article>
+    </section>
+
+    <section class="panel history-panel">
+      <h2>Recent PIN Codes</h2>
+      <p class="muted">
+        The table keeps recent completed codes so you can compare the current simulation with the exact formulas.
+      </p>
+      <div class="history-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>PIN code</th>
+              <th>Repeated digits</th>
+              <th>At least one repeat?</th>
+              <th>All digits different?</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr>
+              <td colspan="5" class="muted">No finished codes yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="notes">
+      <article class="card">
+        <h2>Why Leading Zero Is Allowed</h2>
+        <ul>
+          <li>A PIN code is an identifier, not a decimal number.</li>
+          <li>So codes like 04273 are valid outcomes.</li>
+          <li>That is why the first position still has 10 choices.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Why 30240?</h2>
+        <ul>
+          <li>Start with 10 choices for the first position.</li>
+          <li>Then 9, 8, 7, and 6 because digits cannot repeat.</li>
+          <li>This counts ordered selections without repetition.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Why Use Subtraction?</h2>
+        <ul>
+          <li>Counting repeated codes directly is awkward.</li>
+          <li>It is easier to count all codes, then subtract the all-different ones.</li>
+          <li>That gives 69760 repeated codes.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const drawOneButton = document.getElementById("draw-one");
+    const drawFiveButton = document.getElementById("draw-five");
+    const newCodeButton = document.getElementById("new-code");
+    const autoDemoButton = document.getElementById("auto-demo");
+    const clearAllButton = document.getElementById("clear-all");
+
+    const digitBank = document.getElementById("digit-bank");
+    const codeRow = document.getElementById("code-row");
+    const currentCodeLine = document.getElementById("current-code-line");
+    const repeatDigitsLabel = document.getElementById("repeat-digits");
+    const currentTypeLabel = document.getElementById("current-type");
+    const runCountLabel = document.getElementById("run-count");
+    const repeatCountLabel = document.getElementById("repeat-count");
+    const uniqueCountLabel = document.getElementById("unique-count");
+    const empiricalRepeatLabel = document.getElementById("empirical-repeat");
+    const repeatEvent = document.getElementById("repeat-event");
+    const repeatRead = document.getElementById("repeat-read");
+    const uniqueEvent = document.getElementById("unique-event");
+    const uniqueRead = document.getElementById("unique-read");
+    const historyBody = document.getElementById("history-body");
+
+    const digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+    let currentCode = [];
+    let autoTimer = null;
+    let history = [];
+    let runCount = 0;
+    let repeatCount = 0;
+    let uniqueCount = 0;
+    let loggedCurrentCode = false;
+    let pendingTimers = [];
+
+    function scheduleTask(fn, delay) {
+      const timer = setTimeout(() => {
+        pendingTimers = pendingTimers.filter((id) => id !== timer);
+        fn();
+      }, delay);
+      pendingTimers.push(timer);
+    }
+
+    function clearPendingTimers() {
+      pendingTimers.forEach((timer) => clearTimeout(timer));
+      pendingTimers = [];
+    }
+
+    function digitCounts(code) {
+      const counts = {};
+      code.forEach((digit) => {
+        counts[digit] = (counts[digit] || 0) + 1;
+      });
+      return counts;
+    }
+
+    function repeatedDigits(code) {
+      const counts = digitCounts(code);
+      return Object.keys(counts).filter((digit) => counts[digit] > 1).sort();
+    }
+
+    function hasRepeat(code) {
+      return code.length === 5 && repeatedDigits(code).length > 0;
+    }
+
+    function allDifferent(code) {
+      return code.length === 5 && repeatedDigits(code).length === 0;
+    }
+
+    function codeString(code) {
+      return code.length === 0 ? "-" : code.join("");
+    }
+
+    function chipLineMarkup(code) {
+      if (code.length === 0) {
+        return `<span class="muted">No code yet</span>`;
+      }
+
+      const repeated = new Set(repeatedDigits(code));
+      return code.map((digit) => {
+        const repeatedClass = repeated.has(digit) ? " repeated" : "";
+        return `<span class="chip${repeatedClass}">${digit}</span>`;
+      }).join("");
+    }
+
+    function renderDigitBank(highlightDigit = null) {
+      digitBank.innerHTML = "";
+      digits.forEach((digit) => {
+        const node = document.createElement("div");
+        node.className = "digit-cell";
+        node.textContent = digit;
+        if (digit === highlightDigit) {
+          node.classList.add("pulse");
+        }
+        digitBank.appendChild(node);
+      });
+    }
+
+    function renderCode(highlightIndex = null) {
+      const repeated = new Set(repeatedDigits(currentCode));
+      codeRow.innerHTML = "";
+      for (let i = 0; i < 5; i += 1) {
+        const digit = currentCode[i];
+        const node = document.createElement("div");
+        if (!digit) {
+          node.className = "code-slot empty";
+          node.textContent = "slot";
+        } else {
+          node.className = `code-slot${repeated.has(digit) ? " repeated" : ""}`;
+          node.textContent = digit;
+          if (highlightIndex === i) {
+            node.classList.add("pop");
+          }
+        }
+        codeRow.appendChild(node);
+      }
+    }
+
+    function renderHistory() {
+      if (history.length === 0) {
+        historyBody.innerHTML = `<tr><td colspan="5" class="muted">No finished codes yet.</td></tr>`;
+        return;
+      }
+
+      historyBody.innerHTML = history.map((entry) => {
+        return `
+          <tr>
+            <td>${entry.run}</td>
+            <td>${entry.code}</td>
+            <td>${entry.repeatedDigits}</td>
+            <td class="${entry.repeat ? "yes" : "no"}">${entry.repeat ? "Yes" : "No"}</td>
+            <td class="${entry.unique ? "yes" : "no"}">${entry.unique ? "Yes" : "No"}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function logFinishedCode() {
+      if (currentCode.length !== 5 || loggedCurrentCode) {
+        return;
+      }
+
+      runCount += 1;
+      if (hasRepeat(currentCode)) {
+        repeatCount += 1;
+      } else {
+        uniqueCount += 1;
+      }
+
+      history.unshift({
+        run: runCount,
+        code: codeString(currentCode),
+        repeatedDigits: repeatedDigits(currentCode).join(", ") || "-",
+        repeat: hasRepeat(currentCode),
+        unique: allDifferent(currentCode)
+      });
+
+      history = history.slice(0, 10);
+      loggedCurrentCode = true;
+      renderHistory();
+    }
+
+    function updatePanels() {
+      currentCodeLine.innerHTML = chipLineMarkup(currentCode);
+
+      const repeated = repeatedDigits(currentCode);
+      repeatDigitsLabel.textContent = repeated.length === 0 ? "-" : repeated.join(", ");
+
+      if (currentCode.length < 5) {
+        currentTypeLabel.textContent = "Incomplete";
+        repeatEvent.textContent = "Incomplete";
+        repeatEvent.className = "";
+        uniqueEvent.textContent = "Incomplete";
+        uniqueEvent.className = "";
+        repeatRead.textContent = "Complete the 5 positions to test this.";
+        uniqueRead.textContent = "Complete the 5 positions to test this.";
+      } else if (hasRepeat(currentCode)) {
+        currentTypeLabel.textContent = "Has repetition";
+        repeatEvent.textContent = "Yes";
+        repeatEvent.className = "yes";
+        uniqueEvent.textContent = "No";
+        uniqueEvent.className = "no";
+        repeatRead.textContent = `Repeated digit(s): ${repeated.join(", ")}. This code belongs to the 69760 codes with at least one repetition.`;
+        uniqueRead.textContent = "At least one digit is repeated, so this code is not in the 30240 all-different codes.";
+      } else {
+        currentTypeLabel.textContent = "All digits different";
+        repeatEvent.textContent = "No";
+        repeatEvent.className = "no";
+        uniqueEvent.textContent = "Yes";
+        uniqueEvent.className = "yes";
+        repeatRead.textContent = "Every digit is different, so this code is not in the repeated group.";
+        uniqueRead.textContent = "This code belongs to the 30240 outcomes counted by 10 * 9 * 8 * 7 * 6.";
+      }
+
+      runCountLabel.textContent = String(runCount);
+      repeatCountLabel.textContent = String(repeatCount);
+      uniqueCountLabel.textContent = String(uniqueCount);
+      empiricalRepeatLabel.textContent = runCount === 0 ? "0.0000" : (repeatCount / runCount).toFixed(4);
+
+      if (currentCode.length === 5) {
+        logFinishedCode();
+        runCountLabel.textContent = String(runCount);
+        repeatCountLabel.textContent = String(repeatCount);
+        uniqueCountLabel.textContent = String(uniqueCount);
+        empiricalRepeatLabel.textContent = runCount === 0 ? "0.0000" : (repeatCount / runCount).toFixed(4);
+      }
+    }
+
+    function resetCurrentCode() {
+      clearPendingTimers();
+      currentCode = [];
+      loggedCurrentCode = false;
+      renderDigitBank();
+      renderCode();
+      updatePanels();
+    }
+
+    function clearAll() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        autoDemoButton.textContent = "Auto Run";
+      }
+      history = [];
+      runCount = 0;
+      repeatCount = 0;
+      uniqueCount = 0;
+      renderHistory();
+      resetCurrentCode();
+    }
+
+    function addDigit(animated = true) {
+      if (currentCode.length >= 5) {
+        return;
+      }
+
+      const digit = digits[Math.floor(Math.random() * digits.length)];
+      renderDigitBank(digit);
+
+      scheduleTask(() => {
+        currentCode.push(digit);
+        renderDigitBank();
+        renderCode(currentCode.length - 1);
+        updatePanels();
+      }, animated ? 220 : 0);
+    }
+
+    function completeCode() {
+      const needed = 5 - currentCode.length;
+      for (let i = 0; i < needed; i += 1) {
+        scheduleTask(() => addDigit(true), i * 340);
+      }
+    }
+
+    function toggleAutoDemo() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        autoDemoButton.textContent = "Auto Run";
+        return;
+      }
+
+      const runCycle = () => {
+        resetCurrentCode();
+        completeCode();
+      };
+
+      autoDemoButton.textContent = "Pause";
+      runCycle();
+      autoTimer = setInterval(runCycle, 2500);
+    }
+
+    drawOneButton.addEventListener("click", () => addDigit(true));
+    drawFiveButton.addEventListener("click", completeCode);
+    newCodeButton.addEventListener("click", resetCurrentCode);
+    autoDemoButton.addEventListener("click", toggleAutoDemo);
+    clearAllButton.addEventListener("click", clearAll);
+
+    renderHistory();
+    resetCurrentCode();
+  </script>
+</body>
+</html>
